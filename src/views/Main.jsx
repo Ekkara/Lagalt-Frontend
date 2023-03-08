@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../components/Main/MainPageStyle.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Main = () => {
   //TODO: replace this with data fetched from the server!
@@ -438,7 +438,7 @@ const Main = () => {
         setDisplayItem(database.slice(0, currentlyDisplayedAmount));
       }
     });
-  });
+  },[currentlyDisplayedAmount, database]);
 
   function Project(props) {
     //trim description to be shorter to fit a certain size of the project item
@@ -461,11 +461,10 @@ const Main = () => {
   return (
     <div>
       <h1>Main view</h1>
-
+       {/* holder for the main stream content */}
       <div className="bg-dark">
-        {" "}
-        {/* holder for the main stream content */}
         <div className="mx-4 py-2">
+          {/* generate list on displayable on the page of all projects   */}
           {displayItem.map((project, index) => (
             <Project key={index} project={project} />
           ))}
