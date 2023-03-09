@@ -512,12 +512,3 @@ export function FakeDB() {
   ]);
   return [database, updateDataBase];
 }
-
-export function projectById(id) {
-  for(let i = 0; i < FakeDB.length; i++){
-    if(FakeDB[i].id === id){
-      return FakeDB[i];
-    }
-  }
-  return null;
-}

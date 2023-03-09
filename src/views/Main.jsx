@@ -61,8 +61,8 @@ const Main = () => {
       <div className="bg-dark">
         <div className="mx-4 py-2">
           {/* generate list on displayable on the page of all projects   */}
-          {displayItem.map((project, index) => (
-            <ProjectItem key={index} project={project} />
+          {displayItem.map((project) => (
+            <ProjectItem key={project.id} project={project} />
           ))}    
        
         </div>
