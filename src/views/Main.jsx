@@ -1,5 +1,10 @@
+import React from "react";
+import Template from "./templates/Template";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import "bootstrap/dist/css/bootstrap-grid.css";
 import "../components/Main/MainPageStyle.css";
+import "../components/Template/TemplateStyle.css";
 import { useEffect, useState } from "react";
 import { FakeDB } from "../components/_Temp/FakeDataBase";
 import { Link } from "react-router-dom";
@@ -27,11 +32,13 @@ const Main = () => {
 
       if (isAtBottom) {
         //increase the amount of items visible
-        setCurrentDisplayedAmount(currentlyDisplayedAmount + INCREASE_AMOUNT_OF_ITEM);
+        setCurrentDisplayedAmount(
+          currentlyDisplayedAmount + INCREASE_AMOUNT_OF_ITEM
+        );
         setDisplayItem(database.slice(0, currentlyDisplayedAmount));
       }
     });
-  },[currentlyDisplayedAmount, database]);
+  }, [currentlyDisplayedAmount, database]);
 
   function ProjectItem(props) {
     //trim description to be shorter to fit a certain size of the project item
@@ -41,35 +48,32 @@ const Main = () => {
         shorterDescription.substring(0, MAX_DESCRIPTION_LENGTH - 3).trim() +
         "...";
     }
-    
+
     //return the one item in a given format
     return (
       <Link to={`/project/${props.project.id}`} className="link">
-      <div className="bg-white py-0 my-1 px-2">
-       
-        <h1>{props.project.name}</h1>
-        <p>{shorterDescription}</p>
-      
-        {/* <Link to={`/project/${props.project.id}`}> View Project </Link> */}
-      </div>
+        <div className="bg-white py-0 my-1 px-2">
+          <h1>{props.project.name}</h1>
+          <p>{shorterDescription}</p>
+
+          {/* <Link to={`/project/${props.project.id}`}> View Project </Link> */}
+        </div>
       </Link>
     );
   }
 
   return (
-    <div>
-      <h1>Main view</h1>
-       {/* holder for the main stream content */}
-      <div className="bg-dark">
+    <Template>
+      {/* holder for the main stream content */}
+      <div className="bg-container m-5">
         <div className="mx-4 py-2">
           {/* generate list on displayable on the page of all projects   */}
           {displayItem.map((project) => (
             <ProjectItem key={project.id} project={project} />
-          ))}    
-       
+          ))}
         </div>
       </div>
-    </div>
+    </Template>
   );
 };
 export default Main;
