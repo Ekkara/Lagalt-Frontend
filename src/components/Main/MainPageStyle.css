@@ -1,0 +1,15 @@
+.link {
+    text-decoration: none;
+    color: inherit;
+  }
+.link:hover {
+    text-decoration: none;
+    color: inherit;    
+}
+.link div {
+    border: 3px solid transparent;
+ }
+ 
+ .link:hover div {
+    border: 3px solid #b1b1b1;
+ }

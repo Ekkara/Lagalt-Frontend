@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 
 const Main = () => {
   //TODO: replace this with data fetched from the server!
-
-
   const [database, editDataBase] = FakeDB();
   const MAX_DESCRIPTION_LENGTH = 150; //TODO: static class for every constant value?
   const START_AMOUNT_OF_ITEMS = 15;
@@ -43,14 +41,18 @@ const Main = () => {
         shorterDescription.substring(0, MAX_DESCRIPTION_LENGTH - 3).trim() +
         "...";
     }
-
+    
     //return the one item in a given format
     return (
+      <Link to={`/project/${props.project.id}`} className="link">
       <div className="bg-white py-0 my-1 px-2">
+       
         <h1>{props.project.name}</h1>
         <p>{shorterDescription}</p>
-        <Link to={`/project/${props.project.id}`}> View Project </Link>
+      
+        {/* <Link to={`/project/${props.project.id}`}> View Project </Link> */}
       </div>
+      </Link>
     );
   }
 

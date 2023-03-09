@@ -5,7 +5,7 @@ import { FakeDB, projectById } from "../components/_Temp/FakeDataBase";
 const Project = () => {
   const [database, editDataBase] = FakeDB();
   const { projectId } = useParams();
-  const [project] = useState(database[projectId - 1]); //TODO: this only work in a perfect structure db, we will use getbyId functions instead
+  const [project] = useState(database[projectId - 1]); //TODO: this only work in a perfect structure db, we will use getById functions instead
   console.log(projectId);
   console.log(project);
 
