@@ -1,0 +1,45 @@
+.bg-container{
+    background-color: #D9D9D9;
+}
+.same-height{
+    display: flex;
+    width: 100%;
+}
+
+#search-field{
+  margin: auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 65%;
+  height: 40px;
+  border-radius: 12px;
+  background-color:#D9D9D9;
+}
+
+.site-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+  }
+  
+  header {
+    background-color: #C9CFCF;
+  }
+  
+  aside {
+    background-color: #B3BCBC;
+    width: 300px;
+    flex-shrink: 0;
+
+    min-height: calc(100vh - 80px);
+  }
+  
+  main {
+    background-color: #A8B2B2;
+    overflow-y: auto;
+    width: 100%;
+  }
+  
+  
+  
+  
