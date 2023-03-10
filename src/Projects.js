@@ -19,39 +19,12 @@ const Projects = () => {
 
   const [projectName, setName] = useState('')
   const [projectDescription, setDescription] = useState('')
-  const [projectAvailability, setAvailability] = useState(false)
+  const [projectAvailability, setAvailability] = useState(0)
 
   const [editProjectId, setEditId] = useState('')
   const [editProjectName, setEditName] = useState('')
   const [editProjectDescription, setEditDescription] = useState('')
-  const [editProjectAvailability, setEditAvailability] = useState(false)
-
-  const projectData = [
-    {
-      projectId: 1,
-      projectName: 'Final Fantasy XIV',
-      projectDescription: 'World-Class MMORPG',
-      projectCategoryId: 1,
-      projectCategoryName: 'Games',
-      projectIsAvailable: 1
-    },
-    {
-      projectId: 2,
-      projectName: 'Scream',
-      projectDescription: 'Rock song doubling as a boss theme',
-      projectCategoryId: 2,
-      projectCategoryName: 'Music',
-      projectIsAvailable: 1
-    },
-    {
-      projectId: 3,
-      projectName: 'Hollow Knight',
-      projectDescription: 'Only the best game ever made',
-      projectCategoryId: 1,
-      projectCategoryName: 'Games',
-      projectIsAvailable: 1
-    }
-  ]
+  const [editProjectAvailability, setEditAvailability] = useState(0)
 
   const [data, setData] = useState([])
 
@@ -61,7 +34,7 @@ const Projects = () => {
 
   const getData = () => {
     axios.get('https://localhost:7132/api/Projects')
-      .then((result) =>{
+      .then((result) => {
         setData(result.data)
       })
       .catch((error) => {
@@ -71,34 +44,51 @@ const Projects = () => {
 
   const handleEdit = (id) => {
     handleShow()
+    axios.get(`https://localhost:7132/api/Projects/${id}`)
+    .then((result) =>  {
+      setEditName(result.data.projectName)
+      setEditDescription(result.data.projectDescription)
+      setEditAvailability(result.data.projectAvailability)
+      setEditId(id)
+    })
+    .catch((error) => {
+      toast.error(error)
+    })
   }
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you wish to delete this project?') == true) {
-      alert(id)
+    if (window.confirm('Are you sure you wish to delete this project?') === true) {
+      axios.delete(`https://localhost:7132/api/Projects/${id}`)
+      .then((result) =>  {
+        if(result.status >= 200 && result.status <= 210)
+        {
+          toast.success('Project has been deleted')
+          getData()
+        }
+      }).catch((error) => {
+        toast.error(error)
+      })
     }
   }
 
   const handleUpdate = () => {
-
-  }
-
-  const handleSave = () => {
-    const url = 'https://localhost:7132/api/Projects'
+    const url = `https://localhost:7132/api/Projects/${editProjectId}`
     const data = {
-      "projectId": 0,
-      "projectName": projectName,
-      "projectDescription": projectDescription,
+      "id": editProjectId, 
+      "projectName": editProjectName,
+      "projectDescription": editProjectDescription,
       "projectCategoryId": 1,
-      "projectCategoryName": 1,
-      "projectAvailability": projectAvailability
+      "projectCategoryName": 'Music',
+      "projectAvailability": editProjectAvailability
     }
 
-    axios.post(url, data)
+    axios.put(url, data)
     .then((result) => {
       getData()
       clear()
-      toast.success('Project has been added')
+      toast.success('Project has been edited')
+    }).catch((error) => {
+      toast.error(error)
     })
   }
 
@@ -109,28 +99,50 @@ const Projects = () => {
     setEditName('')
     setEditDescription('')
     setEditAvailability(0)
+    setEditId('')
   }
 
-  const handleActiveChange = (e) => {
+  const handleAvailabilityChange = (e) => {
     if(e.target.checked)
     {
-      setAvailability(true)
+      setAvailability(1)
     }
     else
     {
-      setAvailability(false)
+      setAvailability(0)
     }
   }
 
-  const handleEditActiveChange = (e) => {
+  const handleEditAvailabilityChange = (e) => {
     if(e.target.checked)
     {
-      setEditAvailability(true)
+      setEditAvailability(1)
     }
     else
     {
-      setEditAvailability(false)
+      setEditAvailability(0)
+    } 
+  }
+
+  const handleSave = () => {
+    const url = 'https://localhost:7132/api/Projects'
+    const data = {
+      "projectName": projectName,
+      "projectDescription": projectDescription,
+      "projectCategoryId": 1,
+      "projectCategoryName": 'Music',
+      "projectAvailability": projectAvailability
     }
+
+    axios.post(url, data)
+    .then((result) => {
+      getData()
+      clear()
+      toast.success('Project has been added')
+    })
+    .catch((error) => {
+      toast.error(error)
+    })
   }
 
   return (
@@ -148,9 +160,9 @@ const Projects = () => {
           </Col>
           <Col>
             <input type='checkbox'
-              checked = {projectAvailability == 1 ? true : false}
-              onChange = {(e) => handleActiveChange(e)} value = {projectAvailability} />
-            <label>projectIsAvailable</label>
+              checked = {projectAvailability === 1 ? true : false}
+              onChange = {(e) => handleAvailabilityChange(e)} value = {projectAvailability} />
+            <label>Make Public</label>
           </Col>
           <Col>
             <button className = "btn btn-primary" onClick = {() => handleSave()}>Submit</button>
@@ -162,10 +174,11 @@ const Projects = () => {
         <thead>
           <tr>
             <th>#</th>
-            <th>projectName</th>
-            <th>projectDescription</th>
-            <th>projectCategoryName</th>
-            <th>projectCategoryAvailability</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Availability</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -180,8 +193,8 @@ const Projects = () => {
                     <td>{item.projectCategoryName}</td>
                     <td>{item.projectIsAvailable}</td>
                     <td colSpan={2}>
-                      <button className = "btn btn-primary" onClick={() => handleEdit(item.projectId)}>Edit</button> &nbsp;
-                      <button className = "btn btn-danger" onClick={() => handleDelete(item.projectId)}>Delete</button>
+                      <button className = "btn btn-primary" onClick={() => handleEdit(item.id)}>Edit</button> &nbsp;
+                      <button className = "btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
                     </td>
                   </tr>
                 )
@@ -207,9 +220,9 @@ const Projects = () => {
             </Col>
             <Col>
               <input type = 'checkbox'
-                checked = {editProjectAvailability == 1 ? true : false}
-                onChange = {(e) => handleEditActiveChange(e)} value = {editProjectAvailability} />
-              <label>projectIsAvailable</label>
+                checked = {editProjectAvailability === 1 ? true : false}
+                onChange = {(e) => handleEditAvailabilityChange(e)} value = {editProjectAvailability} />
+              <label>Make Public</label>
             </Col>
           </Row>
         </Modal.Body>
