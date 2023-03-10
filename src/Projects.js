@@ -56,6 +56,7 @@ const Projects = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
+    console.log("S");
     getData()
   }, [])
 

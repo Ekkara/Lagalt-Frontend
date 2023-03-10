@@ -12,7 +12,7 @@ const Template = ({ children }) => {
           </div>
         </header>
         <div className="d-flex same-height">
-          <aside>aside</aside>
+          <aside></aside>
           <main>{children}</main>
         </div>
       </div>
