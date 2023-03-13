@@ -1,19 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { FakeDB, projectById } from "../components/_Temp/FakeDataBase";
 import Template from "./templates/Template";
+import axios from 'axios'
 
 const Project = () => {
-  const [database, editDataBase] = FakeDB();
+  const [data, setData] = useState({
+    projectName: "",
+    projectDescription: ""
+  })
   const { projectId } = useParams();
-  const [project] = useState(database[projectId - 1]); //TODO: this only work in a perfect structure db, we will use getById functions instead
+ 
+  useEffect(() => {
+    getData();
+  },[projectId]);
+
+  const getData = async () => {
+    await axios.get('https://localhost:7132/api/Projects/'+projectId)
+      .then((result) =>{
+        console.log(result.data);
+        setData(result.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   return (
     <Template>
-      {project && (
+      {data && (
         <div className="py-0 my-0 px-2">
-          <h1>{project.name}</h1>
-          <p>{project.description}</p>
+          <h1>{data.projectName}</h1>
+          <p>{data.projectDescription}</p>
           <Link to="/Main">Go back to the main page</Link>
         </div>
       )}
