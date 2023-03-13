@@ -1,0 +1,24 @@
+#Content {
+  display: flex;
+  flex-direction: row;
+}
+#SecondaryContent {
+  width: 25%;
+  min-width: 200px;
+}
+
+#PrimaryContent {
+  width: 75%;
+}
+
+#ProjectHistory {
+  width: calc(100% - 2em);
+  margin-left: 1em;
+  min-height: 300px;
+  max-width: 500px;
+}
+
+.Button {
+  width: 100%;
+  border-radius: 25px;
+}

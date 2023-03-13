@@ -5,8 +5,10 @@ import Login from "./views/Login";
 import Projects from "./Projects";
 import Project from "./views/Project";
 
+
 //TODO: This should not exist in final product
 import LegacyMain from "./components/_Temp/LegacyMain";
+import Profile from "./views/Profile";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
           <Route path="/Projects" element={<Projects/>}/>
           <Route path="/Project/:projectId" element={<Project />} />
           <Route path="/LegacyMain" element={<LegacyMain/>}/>
+          <Route path="/Profile/:projectId" element={<Profile/>}/>
         </Routes>
       </div>
     </BrowserRouter>
