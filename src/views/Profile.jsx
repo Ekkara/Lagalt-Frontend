@@ -75,7 +75,7 @@ const Profile = () => {
 
                 <h4>Project type</h4>
                 <select
-                  className="mb-4 w-100"
+                  className="mb-4"
                   id="Project type"
                   {...register("projectCategoryName")}
                 >
@@ -84,10 +84,14 @@ const Profile = () => {
                 </select>
                 <Row>
                   <Col>
-                    <button className="w-100" type="submit">Create</button>
+                    <button className="w-100" type="submit">
+                      Create
+                    </button>
                   </Col>
                   <Col>
-                    <button className="w-100" onClick={hideCreateForm}>Cancel</button>
+                    <button className="w-100" onClick={hideCreateForm}>
+                      Cancel
+                    </button>
                   </Col>
                 </Row>
               </form>
@@ -95,26 +99,47 @@ const Profile = () => {
           </div>
         )}
 
-        <div id="PrimaryContent">          
-            <div>
-              <h3>User's Profile</h3>
-              <div className="w-80 mx-auto">
-                <img
-                  src={data.profileImgSrc}
-                  className="w-100"
-                  alt="Profile picture"
-                />
-              </div>
-              <h3>Project history</h3>
-              <div id="ProjectHistory" className="bg-container">
-                hello world
-              </div>
+        <div id="PrimaryContent" className="mx-3">
+          <div>
+            <h3>User's Profile</h3>
+            <div className="w-80 mx-auto">
+              <img
+                src={data.profileImgSrc}
+                className="w-100"
+                alt="Profile picture"
+              />
             </div>
+            <h3>Project history</h3>
+            <div id="ProjectHistory" className="bg-container w-100">
+              hello world
+            </div>
+          </div>
         </div>
-        <div className="bg-secondary" id="SecondaryContent">
-          <button className="Button" onClick={displayCreateForm}>
-            Create Project
-          </button>
+        <div className="bg-frame m-3">
+          <div className="bg-content m-3 p-2" id="SecondaryContent">
+            <div className="w-100">
+              <button className="Button" onClick={displayCreateForm}>
+                Create Project
+              </button>
+              <button className="Button">
+                Edit Project
+              </button>
+              <button className="Button mb-4">
+                Delete Project
+              </button>
+              <button className="Button">
+                Chat
+              </button>            
+            </div>
+          </div>
+
+          <div className="bg-content m-3 p-2" id="SecondaryContent">
+            <div className="w-100">
+              <button className="Button">
+                Skills
+              </button>            
+            </div>
+          </div>
         </div>
       </div>
     </Template>
