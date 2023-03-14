@@ -7,6 +7,7 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
+import ProjectForm from "./templates/ProjectForm";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -27,6 +28,8 @@ const Profile = () => {
   const { register, handleSubmit } = useForm();
 
   const createProject = (formData) => {
+    console.log(formData.projectName + " " + register.projectName)
+
     setShowCreateForm(false);
 
     const data = {
@@ -51,54 +54,66 @@ const Profile = () => {
       <div id="Content">
         {/* if creating a project  */}
         {showCreateForm && (
+          // <div>
+          //   <ProjectForm
+          //   placeholderName = "Insert name..."
+          //   placeholderDescription = "Insert description"
+          //   placeholderProjectType = ""
+          //   confirmButtonText = "Create"
+          //   handleSubmit = {createProject}
+          //   handleCancel = {hideCreateForm}
+          //   register = {register}              
+          //   />
+          // </div>
+
           <div>
-            <div className="dark" onClick={hideCreateForm}></div>
-            <div className="aboveDark bg-container">
-              <form onSubmit={handleSubmit(createProject)}>
-                <h4>Project's name:</h4>
-                <input
-                  className="mb-4"
-                  placeholder="Insert name..."
-                  {...register("projectName", {
-                    required: true,
-                    minLength: 5,
-                    maxLength: 50,
-                  })}
-                />
+          <div className="dark" onClick={hideCreateForm}></div>
+          <div className="aboveDark bg-container">
+            <form onSubmit={handleSubmit(createProject)}>
+              <h4>Project's name:</h4>
+              <input
+                className="mb-4"
+                placeholder="Insert name..."
+                {...register("projectName", {
+                  required: true,
+                  minLength: 5,
+                  maxLength: 50,
+                })}
+              />
 
-                <h4>Project's description:</h4>
-                <textarea
-                  className="mb-4"
-                  placeholder="Insert description..."
-                  {...register("projectDescription")}
-                />
+              <h4>Project's description:</h4>
+              <textarea
+                className="mb-4"
+                placeholder="Insert description..."
+                {...register("projectDescription")}
+              />
 
-                <h4>Project type</h4>
-                <select
-                  className="mb-4"
-                  id="Project type"
-                  {...register("projectCategoryName")}
-                >
-                  <option value="Game">Game</option>
-                  <option value="Music">Music</option>
-                </select>
-                <Row>
-                  <Col>
-                    <button className="w-100" type="submit">
-                      Create
-                    </button>
-                  </Col>
-                  <Col>
-                    <button className="w-100" onClick={hideCreateForm}>
-                      Cancel
-                    </button>
-                  </Col>
-                </Row>
-              </form>
-            </div>
+              <h4>Project type</h4>
+              <select
+                className="mb-4 w-100"
+                id="Project type"
+                {...register("projectCategoryName")}
+              >
+                <option value="Game">Game</option>
+                <option value="Music">Music</option>
+              </select>
+              <Row>
+                <Col>
+                  <button className="w-100" type="submit">
+                    Create
+                  </button>
+                </Col>
+                <Col>
+                  <button className="w-100" onClick={hideCreateForm}>
+                    Cancel
+                  </button>
+                </Col>
+              </Row>
+            </form>
           </div>
+        </div>
         )}
-
+          {/* left side */}
         <div id="PrimaryContent" className="mx-3">
           <div>
             <h3>User's Profile</h3>
@@ -115,6 +130,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        {/* right side */}
         <div className="bg-frame m-3">
           <div className="bg-content m-3 p-2" id="SecondaryContent">
             <div className="w-100">

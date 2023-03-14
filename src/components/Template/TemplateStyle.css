@@ -22,6 +22,18 @@
 .column{
   flex-direction: column;
 }
+#Content {
+  display: flex;
+  flex-direction: row;
+}
+
+#SecondaryContent {
+  width: 200px;
+}
+
+#PrimaryContent {
+  width: calc(100% - 200px);
+}
 
 #search-field {
   margin: auto;

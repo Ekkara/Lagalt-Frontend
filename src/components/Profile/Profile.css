@@ -1,14 +1,5 @@
-#Content {
-  display: flex;
-  flex-direction: row;
-}
-#SecondaryContent {
-  width: 200px
-}
 
-#PrimaryContent {
-  width: calc(100% - 200px);
-}
+
 
 #ProjectHistory {
   min-height: 300px;
