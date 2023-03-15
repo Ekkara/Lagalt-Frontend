@@ -9,6 +9,7 @@ import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import ProjectForm from "./templates/ProjectForm";
+import { useNavigate } from 'react-router-dom';
 
 const Project = () => {
   const [data, setData] = useState({
@@ -26,14 +27,14 @@ const Project = () => {
     setShowEditForm(false);
   };
 
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
   const editProject = async (formData) => {
     setShowEditForm(false);
 
-    
     axios
-      .put( "https://localhost:7132/api/Projects/" + projectId, {
+      .put("https://localhost:7132/api/Projects/" + projectId, {
         id: projectId,
         projectName: formData.projectName,
         projectDescription: formData.projectDescription,
@@ -41,9 +42,23 @@ const Project = () => {
         projectCategoryName: formData.projectCategoryName,
         projectIsAvailable: formData.projectAvailability,
       })
+      .then(()=>{
+        getData();
+      })
       .catch((error) => {
         console.error("Error updating element:", error);
       });
+  };
+
+  const deleteProject = () => {
+    if (
+      window.confirm(
+        "Are you sure you wish to delete this project? This can't be undone!"
+      )
+    ) {
+      axios.delete("https://localhost:7132/api/Projects/" + projectId);
+      navigate("/main");
+    }
   };
 
   useEffect(() => {
@@ -74,7 +89,7 @@ const Project = () => {
                   <h4>Project's name:</h4>
                   <input
                     className="mb-4"
-                    placeholder="Insert name..."
+                    defaultValue={data.projectName}
                     {...register("projectName", {
                       required: true,
                       minLength: 5,
@@ -85,7 +100,7 @@ const Project = () => {
                   <h4>Project's description:</h4>
                   <textarea
                     className="mb-4"
-                    placeholder="Insert description..."
+                    defaultValue={data.projectDescription}
                     {...register("projectDescription")}
                   />
 
@@ -93,6 +108,7 @@ const Project = () => {
                   <select
                     className="mb-4 w-100"
                     id="Project type"
+                    defaultValue={data.projectCategoryName}
                     {...register("projectCategoryName")}
                   >
                     <option value="Game">Game</option>
@@ -101,7 +117,7 @@ const Project = () => {
                   <Row>
                     <Col>
                       <button className="w-100" type="submit">
-                        Create
+                        Confirm
                       </button>
                     </Col>
                     <Col>
@@ -127,7 +143,9 @@ const Project = () => {
                 <button className="Button" onClick={displayEditForm}>
                   Edit Project
                 </button>
-                <button className="Button mb-4">Delete Project</button>
+                <button className="Button mb-4" onClick={deleteProject}>
+                  Delete Project
+                </button>
               </div>
             </div>
 
