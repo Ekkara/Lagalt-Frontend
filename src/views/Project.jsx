@@ -69,7 +69,6 @@ const Project = () => {
     await axios
       .get("https://localhost:7132/api/Projects/" + projectId)
       .then((result) => {
-        console.log(result.data);
         setData(result.data);
       })
       .catch((error) => {
@@ -133,7 +132,7 @@ const Project = () => {
           <div id="PrimaryContent">
             <div className="py-0 my-0 px-2">
               <h1>{data.projectName}</h1>
-              <p>{data.projectDescription}</p>
+              <p>{data.description}</p>
               <Link to="/Main">Go back to the main page</Link>
             </div>
           </div>

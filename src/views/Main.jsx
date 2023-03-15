@@ -25,7 +25,6 @@ const Main = () => {
     await axios.get('https://localhost:7132/api/Projects')
       .then((result) =>{
         setData(result.data)
-        console.log(result.data.length);
       })
       .catch((error) => {
         console.log(error)
@@ -34,7 +33,7 @@ const Main = () => {
 
   function ProjectItem(props) {
  //trim description to be shorter to fit a certain size of the project item
- let shorterDescription = props.project.projectDescription;
+ let shorterDescription = props.project.description;
  if (shorterDescription.length > MAX_DESCRIPTION_LENGTH) {
   shorterDescription =
     shorterDescription.substring(0, MAX_DESCRIPTION_LENGTH - 3).trim() +

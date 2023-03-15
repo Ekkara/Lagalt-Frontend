@@ -11,11 +11,17 @@ import ProjectForm from "./templates/ProjectForm";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
-
   const [data, setData] = useState({
+    profileId: 1,
     profileName: "",
     profileImgSrc: "",
   });
+  
+  useEffect(() => {
+    //TODO: add security so not any one can view profile
+    
+  });
+  
 
   const displayCreateForm = () => {
     if (showCreateForm) setShowCreateForm(false);
@@ -28,26 +34,20 @@ const Profile = () => {
   const { register, handleSubmit } = useForm();
 
   const createProject = (formData) => {
-    console.log(formData.projectName + " " + register.projectName)
-
     setShowCreateForm(false);
 
     const data = {
+      ownerId: 1,
       projectName: formData.projectName,
-      projectDescription: formData.projectDescription,
-      projectCategoryId: 1,
-      projectCategoryName: formData.projectCategoryName,
-      projectIsAvailable: formData.projectAvailability,
+      description: formData.projectDescription,
+      categoryName: formData.projectCategoryName,
+      isAvailable: true
     };
 
     axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
       console.error("Error while adding:", error);
     });
   };
-
-  useEffect(() => {
-    //TODO: add security so not any one can view profile
-  });
 
   return (
     <Template>
