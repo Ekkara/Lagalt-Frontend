@@ -9,7 +9,7 @@ import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import ProjectForm from "./templates/ProjectForm";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Project = () => {
   const [data, setData] = useState({
@@ -32,17 +32,15 @@ const Project = () => {
 
   const editProject = async (formData) => {
     setShowEditForm(false);
-
+console.log(formData);
     axios
       .put("https://localhost:7132/api/Projects/" + projectId, {
-        id: projectId,
         projectName: formData.projectName,
-        projectDescription: formData.projectDescription,
-        projectCategoryId: 1,
-        projectCategoryName: formData.projectCategoryName,
-        projectIsAvailable: formData.projectAvailability,
+        description: formData.projectDescription,
+        categoryName: formData.projectCategoryName,
+        isAvailable: formData.projectAvailability === "true",
       })
-      .then(()=>{
+      .then(() => {
         getData();
       })
       .catch((error) => {
@@ -113,6 +111,13 @@ const Project = () => {
                     <option value="Game">Game</option>
                     <option value="Music">Music</option>
                   </select>
+                  <h4>Is available</h4>
+                  <input
+                    type="checkbox"
+                    value="true"
+                    defaultValue={data.isAvailable}
+                    {...register("projectAvailability")}
+                  />
                   <Row>
                     <Col>
                       <button className="w-100" type="submit">
