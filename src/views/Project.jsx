@@ -8,10 +8,14 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
-import ProjectForm from "./templates/ProjectForm";
 import { useNavigate } from "react-router-dom";
 
 const Project = () => {
+    //0 - not logged in
+    //1 - user not member
+    //2 - member
+    //3 - admin
+
   const [data, setData] = useState({
     projectName: "",
     projectDescription: "",
@@ -65,8 +69,10 @@ console.log(formData);
 
   const getData = async () => {
     await axios
-      .get("https://localhost:7132/api/Projects/" + projectId)
+      //.get("https://localhost:7132/api/Projects/" + projectId)
+      .get(`https://localhost:7132/api/Projects/${projectId}/AdminProjectView`)
       .then((result) => {
+        console.log(result.data);
         setData(result.data);
       })
       .catch((error) => {
@@ -114,7 +120,7 @@ console.log(formData);
                   <h4>Is available</h4>
                   <input
                     type="checkbox"
-                    value="true"
+                    //value="true"
                     defaultValue={data.isAvailable}
                     {...register("projectAvailability")}
                   />

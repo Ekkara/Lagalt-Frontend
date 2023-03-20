@@ -7,7 +7,6 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
-import ProjectForm from "./templates/ProjectForm";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
