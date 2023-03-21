@@ -17,14 +17,38 @@ const Main = () => {
 
   const MAX_DESCRIPTION_LENGTH = 150; //TODO: static class for every constant value?
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const START_AMOUNT_OF_ITEMS = 15;
+  const INCREASE_AMOUNT_OF_ITEM = 4;
+  const [currentlyDisplayedAmount, setCurrentDisplayedAmount] = useState(
+    START_AMOUNT_OF_ITEMS
+  );
 
-  const getData = async () => {
-    await axios.get('https://localhost:7132/api/Projects')
+  useEffect(() => {
+    getData(0, START_AMOUNT_OF_ITEMS);
+
+    window.addEventListener("scroll", () => {
+      const scrollingElement = document.scrollingElement;
+      const isAtBottom =
+        scrollingElement.scrollTop + scrollingElement.clientHeight + 1 >=
+        scrollingElement.scrollHeight;
+
+      if (isAtBottom) {
+        //increase the amount of items visible
+        setCurrentDisplayedAmount(
+          currentlyDisplayedAmount + INCREASE_AMOUNT_OF_ITEM
+        );
+        getData(data.length, currentlyDisplayedAmount);
+        //setDisplayItem(database.slice(0, currentlyDisplayedAmount));
+      }
+    });
+
+    //getData();
+  }, [currentlyDisplayedAmount]);
+
+  const getData = async (from, to) => {
+    await axios.get(`https://localhost:7132/api/Projects/ProjectsForMainPage?start=${from}&range=${(to-from)}`)
       .then((result) =>{
-        setData(result.data)
+        setData([...result.data])
       })
       .catch((error) => {
         console.log(error)

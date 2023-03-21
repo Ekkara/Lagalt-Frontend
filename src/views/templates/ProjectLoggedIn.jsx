@@ -86,6 +86,7 @@ const ProjectLoggedIn = (props) => {
                     className="mb-4"
                     {...register("message")}
                   />
+                  <p>By confirming this, you agree that they will be able to see your profile even if it is set to being private/hidden </p>
                   <Row>
                     <Col>
                       <button className="w-100" type="submit">

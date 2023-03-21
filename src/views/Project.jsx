@@ -25,7 +25,7 @@ const Project = () => {
   //2 - member
   //3 - admin
 
-  const loggedInStatus = 3;
+  const loggedInStatus = 1;
 
   useEffect(() => {
     const fetchData = async () => {
