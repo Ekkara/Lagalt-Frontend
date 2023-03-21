@@ -32,7 +32,6 @@ const Project = () => {
       try {
         const data = await ProjectUtils.getData(
           `https://localhost:7132/api/Projects/${projectId}/ProjectExist`
-          // `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
         );
         setData(data);
       } catch {
@@ -43,7 +42,6 @@ const Project = () => {
   }, [projectId]);
 
   const getProjectWindow = () => {
-    console.log(data);
     if (!data) {
       return <ProjectNotFound />;
     } else {

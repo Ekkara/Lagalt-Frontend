@@ -1,5 +1,8 @@
 .description{
 min-height: 120px;
+max-height: 600px;
+overflow-y: auto;
+
 }
 
 .members{

@@ -18,39 +18,32 @@ const ProjectAdmin = (props) => {
   const { projectId } = props;
 
   const [data, setData] = useState({
-    projectName: "",
-    projectDescription: "",
   });
   const [showEditForm, setShowEditForm] = useState(false);
-  const [showApplicants, setShowApplicants] = useState(false);
 
   const displayEditForm = () => {
     if (showEditForm) setShowEditForm(false);
     else setShowEditForm(true);
   };
 
-  const displayApplicants = () => {
-    if (showApplicants) setShowApplicants(false);
-    else setShowApplicants(true);
-  };
-
   const hideEditForm = () => {
     setShowEditForm(false);
-  };
-  const hideApplicants = () => {
-    setShowApplicants(false);
   };
 
   const { register, handleSubmit } = useForm();
 
   const editProject = async (formData) => {
     setShowEditForm(false);
+
+    console.log(formData);
+
     axios
       .put("https://localhost:7132/api/Projects/" + projectId, {
         projectName: formData.projectName,
         description: formData.projectDescription,
         categoryName: formData.projectCategoryName,
-        isAvailable: formData.projectAvailability === "true",
+        isAvailable: !(formData.projectAvailability === false),
+        repositoryLink: formData.projectRepositoryLink,        
       })
       .then(async () => {
         const data = await ProjectUtils.getData(
@@ -62,7 +55,6 @@ const ProjectAdmin = (props) => {
         console.error("Error updating project:", error);
       });
   };
-
 
   const deleteProject = () => {
     if (
@@ -82,7 +74,6 @@ const ProjectAdmin = (props) => {
           `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
         );
         setData(data);
-        console.log(data);
       } catch {
         setData(null);
       }
@@ -91,30 +82,73 @@ const ProjectAdmin = (props) => {
   }, [projectId]);
 
   function MemberItem(props) {
-         //return the one item in a given format
-       return (
-        //  <Link to={`/project/${props.project.id}`} className="link">
-           <div className="bg-container rounded-10 px-2">
-             <h4> {props.member.userName}</h4>    
-           </div>
-        //  </Link>
-       );
-     }
+    //return the one item in a given format
+    return (
+      //  <Link to={`/project/${props.project.id}`} className="link">
+      <div className="border border-dark bg-container rounded-10 px-2">
+        <h4> {props.member.userName}</h4>
+      </div>
+      //  </Link>
+    );
+  }
 
+  const acceptApplicant = (applicantId) => {
+    console.log("accept1");
+    axios
+      .put(
+        `https://localhost:7132/api/Projects/${applicantId}/AcceptProjectApplication`,
+        {}
+      )
+      .then(async () => {
+        const data = await ProjectUtils.getData(
+          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
+        );
+        setData(data);
+      })
+      .catch((error) => {
+        console.error("Error updating project:", error);
+      });
+    console.log("accept2");
+  };
 
-     function ApplicantItem(props) {
-        //return the one item in a given format
-      return (
-       //  <Link to={`/project/${props.project.id}`} className="link">
-          <div className="bg-white rounded-10 px-2">
-            <h5>{props.applicant.applicantName}</h5>
-            <p> {props.applicant.message} </p>    
-          </div>
-       //  </Link>
-      );
-    }
+  const declineApplicant = (applicantId) => {
+    console.log("decline 1");
+    axios
+      .put(
+        `https://localhost:7132/api/Projects/${applicantId}/RemoveProjectApplicationFromProject`,
+        {}
+      )
+      .then(async () => {
+        const data = await ProjectUtils.getData(
+          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
+        );
+        setData(data);
+      })
+      .catch((error) => {
+        console.error("Error updating project:", error);
+      });
+    console.log("decline 2");
+  };
 
-  
+  function ApplicantItem(props) {
+    //return the one item in a given format
+    return (
+      //  <Link to={`/project/${props.project.id}`} className="link">
+      <div className="border border-dark rounded-10 px-2 mb-1">
+        <h5>{props.applicant.applicantName}</h5>
+        <p> {props.applicant.message} </p>
+
+        <button onClick={() => acceptApplicant(props.applicant.id)}>
+          Accept
+        </button>
+        <button onClick={() => declineApplicant(props.applicant.id)}>
+          Decline
+        </button>
+      </div>
+      //  </Link>
+    );
+  }
+
   return (
     <div>
       {data && (
@@ -138,8 +172,16 @@ const ProjectAdmin = (props) => {
                   <h4>Project's description:</h4>
                   <textarea
                     className="mb-4"
-                    defaultValue={data.projectDescription}
+                    defaultValue={data.description}
                     {...register("projectDescription")}
+                  />
+
+                  <h4>Project's repositoryLink:</h4>
+                  <input
+                    className="mb-4"
+                    style={{ width: "100%" }}
+                    defaultValue={data.repositoryLink}
+                    {...register("projectRepositoryLink")}
                   />
 
                   <h4>Project type</h4>
@@ -152,7 +194,7 @@ const ProjectAdmin = (props) => {
                     <option value="Game">Game</option>
                     <option value="Music">Music</option>
                   </select>
-                  <h4>Is available</h4>
+                  <h4>Allow Applications</h4>
                   <input
                     type="checkbox"
                     //value="true"
@@ -176,22 +218,6 @@ const ProjectAdmin = (props) => {
             </div>
           )}
 
-            {showApplicants && (
-            <div>
-              <div className="dark" onClick={hideApplicants}></div>
-              <div className="aboveDark bg-container flex row">
-                <h4>Applicants:</h4>
-                <div style={{  height: "200px", overflow: "auto" }}>
-                  {data.applications &&
-                    data.applications.map((item, index) => (
-                      <ApplicantItem key={index} applicant={item} />
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-
           <div id="PrimaryContent">
             <div className="py-0 my-0 px-2">
               <div className="bg-container mt-2 px-3 pt-3 pb-1  rounded-10">
@@ -203,19 +229,30 @@ const ProjectAdmin = (props) => {
               </div>
               {data.repositoryLink && (
                 <div className="bg-container mt-2 p-1 rounded-10">
-                  <p> Repository: {data.repositoryLink}</p>
+                  <h3>Repository:</h3> 
+                    <p>{data.repositoryLink}</p>
                 </div>
               )}
-              <div className="bg-container mt-2 p-1 rounded-10">
-              {data.applications &&(
-                <p>Amount of unsorted applicants: {data.applications.length}</p>)}
-              </div>
               <div className="bg-container mt-2 p-1 rounded-10 members">
                 <h3>Collaborators:</h3>
-                <div style={{  height: "200px", overflow: "auto" }}>
+                <div style={{ height: "200px", overflow: "auto" }}>
                   {data.members &&
                     data.members.map((item) => (
                       <MemberItem key={item.id} member={item} />
+                    ))}
+                </div>
+              </div>
+              <div className="bg-container mt-2 p-1 rounded-10 members">
+                <h3>Applicants:</h3>
+                {data.applications && (
+                  <p>
+                    Amount of unsorted applicants: {data.applications.length}
+                  </p>
+                )}
+                <div style={{ height: "250px", overflow: "auto" }}>
+                  {data.applications &&
+                    data.applications.map((item, index) => (
+                      <ApplicantItem key={index} applicant={item} />
                     ))}
                 </div>
               </div>
@@ -228,11 +265,8 @@ const ProjectAdmin = (props) => {
                 <button className="Button" onClick={displayEditForm}>
                   Edit Project
                 </button>
-                <button className="Button" onClick={displayEditForm}>
-                  Edit Project
-                </button>
-                <button className="Button mb-4" onClick={deleteProject}>
-                  Edit Repository link
+                <button className="Button" onClick={deleteProject}>
+                  Delete Project
                 </button>
               </div>
             </div>
@@ -240,7 +274,6 @@ const ProjectAdmin = (props) => {
             <div className="bg-content m-3 p-2" id="SecondaryContent">
               <div className="w-100">
                 <button className="Button">Group Chat</button>
-                <button className="Button" onClick={displayApplicants}>Display applicants</button>
               </div>
             </div>
           </div>
