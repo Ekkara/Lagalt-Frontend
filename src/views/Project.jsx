@@ -11,59 +11,60 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import React, { useCallback } from 'react';
 
+import ProjectNotFound from "./templates/ProjectNotFound";
+import ProjectNotLoggedIn from "./templates/ProjectNotLoggedIn";
+import ProjectLoggedIn from "./templates/ProjectLoggedIn";
+import ProjectCollaborator from "./templates/ProjectCollaborator";
+import ProjectAdmin from "./templates/ProjectAdmin";
+import ProjectUtils from "../components/Utils/ProjectUtils";
+
 const Project = () => {
-    //0 - not logged in
-    //1 - user not member
-    //2 - member
-    //3 - admin
-
-  const [data, setData] = useState({
-    projectName: "",
-    projectDescription: "",
-  });
   const { projectId } = useParams();
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [data, setData] = useState();
+  //0 - not logged in
+  //1 - user not member
+  //2 - member
+  //3 - admin
 
-  const displayEditForm = () => {
-    if (showEditForm) setShowEditForm(false);
-    else setShowEditForm(true);
-  };
-  const hideEditForm = () => {
-    setShowEditForm(false);
-  };
+  const loggedInStatus = 3;
 
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await ProjectUtils.getData(
+          `https://localhost:7132/api/Projects/${projectId}/ProjectExist`
+          // `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
+        );
+        setData(data);
+      } catch {
+        setData(null);
+      }
+    };
+    fetchData();
+  }, [projectId]);
 
-  const editProject = async (formData) => {
-    setShowEditForm(false);
-console.log(formData);
-    axios
-      .put("https://localhost:7132/api/Projects/" + projectId, {
-        projectName: formData.projectName,
-        description: formData.projectDescription,
-        categoryName: formData.projectCategoryName,
-        isAvailable: formData.projectAvailability === "true",
-      })
-      .then(() => {
-        getData();
-      })
-      .catch((error) => {
-        console.error("Error updating element:", error);
-      });
-  };
+  const getProjectWindow = () => {
+    console.log(data);
+    if (!data) {
+      return <ProjectNotFound />;
+    } else {
+      switch (loggedInStatus) {
+        case 1:
+          return <ProjectLoggedIn projectId={projectId} />;
+        
+          case 2:
+          return <ProjectCollaborator projectId={projectId} />;
 
-  const deleteProject = () => {
-    if (
-      window.confirm(
-        "Are you sure you wish to delete this project? This can't be undone!"
-      )
-    ) {
-      axios.delete("https://localhost:7132/api/Projects/" + projectId);
-      navigate("/main");
+        case 3:
+          return <ProjectAdmin projectId={projectId} />;
+
+        default:
+          return <ProjectNotLoggedIn projectId={projectId} />;
+      }
     }
   };
 
+<<<<<<< HEAD
   const getData = useCallback(async () => {
     await axios
       //.get("https://localhost:7132/api/Projects/" + projectId)
@@ -171,5 +172,8 @@ useEffect(() => {
       )}
     </Template>
   );
+=======
+  return <Template>{getProjectWindow()}</Template>;
+>>>>>>> 498d7c1c08d4ee2b9a654b67b9d68c750ea37160
 };
 export default Project;

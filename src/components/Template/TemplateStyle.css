@@ -22,6 +22,17 @@
 .column{
   flex-direction: column;
 }
+.rounded-10{
+  border-radius: 10px;
+}
+.rounded-25{
+  border-radius: 25px;
+}
+.rounded-50{
+  border-radius: 50px;
+}
+
+
 #Content {
   display: flex;
   flex-direction: row;
