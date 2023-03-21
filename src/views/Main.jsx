@@ -48,6 +48,13 @@ const Main = () => {
         </div>
       </Link>
     );
+    // return(
+    //   <Link to={`/login/${props.login.id}`} className="link">
+    //     <div className="bg-white py-0 my-1 px-2">
+    //      <h1>{props.login.LogIn}</h1>    
+    //     </div>
+    //   </Link>
+    // )
   }
 
   return (

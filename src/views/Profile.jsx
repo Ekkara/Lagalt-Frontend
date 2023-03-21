@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+//import { Link, useParams } from "react-router-dom";
 import Template from "./templates/Template";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,6 +7,8 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
+import { keycloak } from "../keycloak";
+
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -15,11 +17,32 @@ const Profile = () => {
     profileName: "",
     profileImgSrc: "",
   });
-  
+
+  const { authenticated, subject, token } = keycloak;
+
   useEffect(() => {
-    //TODO: add security so not any one can view profile
-    
-  });
+    if (authenticated) {
+      // Fetch the user profile data from the API and update the state
+      const fetchProfileData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:7132/api/Profile/${subject}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setData(response.data);
+        } catch (error) {
+          console.error("Error while fetching profile data:", error);
+        }
+      };
+  
+      fetchProfileData();
+    } else {
+      // Redirect the user to the login page or show a message
+    }
+  }, [authenticated, subject, token]);
+  
+  
   
 
   const displayCreateForm = () => {
@@ -34,19 +57,24 @@ const Profile = () => {
 
   const createProject = (formData) => {
     setShowCreateForm(false);
-
+  
     const data = {
-      ownerId: 1,
+      ownerId: keycloak.subject,
       projectName: formData.projectName,
       description: formData.projectDescription,
       categoryName: formData.projectCategoryName,
       isAvailable: true
     };
-
-    axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
+  
+    axios.post("https://localhost:7132/api/Projects", data, {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`,
+      },
+    }).catch((error) => {
       console.error("Error while adding:", error);
     });
   };
+  
 
   return (
     <Template>
@@ -117,10 +145,7 @@ const Profile = () => {
           <div>
             <h3>User's Profile</h3>
             <div className="w-80 mx-auto">
-              <img
-                src={data.profileImgSrc}
-                className="w-100"
-                alt="Profile picture"
+              <imge src={data.profileImgSrc} className="w-100" alt="Profile picture"
               />
             </div>
             <h3>Project history</h3>

@@ -9,6 +9,7 @@ import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import React, { useCallback } from 'react';
 
 const Project = () => {
     //0 - not logged in
@@ -63,11 +64,7 @@ console.log(formData);
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, [projectId]);
-
-  const getData = async () => {
+  const getData = useCallback(async () => {
     await axios
       //.get("https://localhost:7132/api/Projects/" + projectId)
       .get(`https://localhost:7132/api/Projects/${projectId}/AdminProjectView`)
@@ -78,7 +75,11 @@ console.log(formData);
       .catch((error) => {
         console.log(error);
       });
-  };
+  }, [projectId]);
+
+useEffect(() => {
+    getData();
+}, [projectId, getData]);
 
   return (
     <Template>

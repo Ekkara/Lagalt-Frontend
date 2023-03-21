@@ -75,7 +75,7 @@ const Projects = () => {
   }
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you wish to delete this project?') == true) {
+    if (window.confirm('Are you sure you wish to delete this project?') === true) {
       alert(id)
     }
   }
@@ -149,7 +149,7 @@ const Projects = () => {
           </Col>
           <Col>
             <input type='checkbox'
-              checked = {projectAvailability == 1 ? true : false}
+              checked = {projectAvailability === 1 ? true : false}
               onChange = {(e) => handleActiveChange(e)} value = {projectAvailability} />
             <label>projectIsAvailable</label>
           </Col>
@@ -208,7 +208,7 @@ const Projects = () => {
             </Col>
             <Col>
               <input type = 'checkbox'
-                checked = {editProjectAvailability == 1 ? true : false}
+                checked = {editProjectAvailability === 1 ? true : false}
                 onChange = {(e) => handleEditActiveChange(e)} value = {editProjectAvailability} />
               <label>projectIsAvailable</label>
             </Col>
