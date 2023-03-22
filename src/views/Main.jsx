@@ -46,7 +46,7 @@ const Main = () => {
   }, [currentlyDisplayedAmount]);
 
   const getData = async (from, to) => {
-    await axios.get(`https://localhost:7132/api/Projects/ProjectsForMainPage?start=${from}&range=${(to-from)}`)
+    await axios.get(`https://localhost:7132/api/Projects?start=${from}&range=${(to-from)}`)
       .then((result) =>{
         setData([...result.data])
       })

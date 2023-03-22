@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showMessageForm, setShowMessageForm] = useState(false)
   const [data, setData] = useState({
     profileId: 1,
     profileName: "",
@@ -29,6 +30,14 @@ const Profile = () => {
   const hideCreateForm = () => {
     setShowCreateForm(false);
   };
+  
+  const displayMessageForm = () => {
+    if (showMessageForm) setShowMessageForm(false);
+    else setShowMessageForm(true);
+  }
+  const hideMessageForm = () => {
+    setShowMessageForm(false);
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -46,6 +55,23 @@ const Profile = () => {
     axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
       console.error("Error while adding:", error);
     });
+  };
+
+  const createMessage = (formData) => {
+    setShowMessageForm(false);
+
+
+    /*const data = {
+      ownerId: 1,
+      projectName: formData.projectName,
+      description: formData.projectDescription,
+      categoryName: formData.projectCategoryName,
+      isAvailable: true
+    };
+
+    axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
+      console.error("Error while adding:", error);
+    });*/
   };
 
   return (
@@ -112,6 +138,33 @@ const Profile = () => {
           </div>
         </div>
         )}
+        {showMessageForm && (
+          <div>
+          <div className="dark" onClick={hideMessageForm}></div>
+          <div className="aboveDark bg-container">
+            <form onSubmit={handleSubmit(createMessage)}>
+              <h4>Message:</h4>
+              <textarea
+                className="mb-4"
+                placeholder="Say something!"
+                {...register("projectDescription")}
+              />
+              <Row>
+                <Col>
+                  <button className="w-100" type="submit">
+                    Post
+                  </button>
+                </Col>
+                <Col>
+                  <button className="w-100" onClick={hideMessageForm}>
+                    Cancel
+                  </button>
+                </Col>
+              </Row>
+            </form>
+          </div>
+        </div>
+        )}
           {/* left side */}
         <div id="PrimaryContent" className="mx-3">
           <div>
@@ -142,7 +195,7 @@ const Profile = () => {
               <button className="Button mb-4">
                 Delete Project
               </button>
-              <button className="Button">
+              <button className="Button" onClick={displayMessageForm}>
                 Chat
               </button>            
             </div>
