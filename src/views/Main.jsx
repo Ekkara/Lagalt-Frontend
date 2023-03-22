@@ -7,68 +7,58 @@ import "../components/Main/MainPageStyle.css";
 import "../components/Template/TemplateStyle.css";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 import { async } from "q";
 
-
 const Main = () => {
-  //TODO: replace this with data fetched from the server!
-  const [data, setData] = useState([])
-
-  const MAX_DESCRIPTION_LENGTH = 150; //TODO: static class for every constant value?
-
-  const START_AMOUNT_OF_ITEMS = 15;
+  const START_AMOUNT_OF_ITEMS = 10;
   const INCREASE_AMOUNT_OF_ITEM = 4;
-  const [currentlyDisplayedAmount, setCurrentDisplayedAmount] = useState(
-    START_AMOUNT_OF_ITEMS
-  );
+  const [data, setData] = useState([]);
+  const [currentLength, setLength] = useState(0);
 
   useEffect(() => {
     getData(0, START_AMOUNT_OF_ITEMS);
+  }, []);
 
-    window.addEventListener("scroll", () => {
+  useEffect(() => {
+    const handleScroll = () => {
       const scrollingElement = document.scrollingElement;
       const isAtBottom =
         scrollingElement.scrollTop + scrollingElement.clientHeight + 1 >=
         scrollingElement.scrollHeight;
 
       if (isAtBottom) {
-        //increase the amount of items visible
-        setCurrentDisplayedAmount(
-          currentlyDisplayedAmount + INCREASE_AMOUNT_OF_ITEM
-        );
-        getData(data.length, currentlyDisplayedAmount);
-        //setDisplayItem(database.slice(0, currentlyDisplayedAmount));
+        getData(currentLength, currentLength + INCREASE_AMOUNT_OF_ITEM);
       }
-    });
+    };
 
-    //getData();
-  }, [currentlyDisplayedAmount]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [currentLength]);
 
   const getData = async (from, to) => {
-    await axios.get(`https://localhost:7132/api/Projects/ProjectsForMainPage?start=${from}&range=${(to-from)}`)
-      .then((result) =>{
-        setData([...result.data])
+    await axios
+      .get(
+        `https://localhost:7132/api/Projects/ProjectsForMainPage?start=${from}&range=${
+          to - from
+        }`
+      )
+      .then((result) => {
+        setData([...data, ...result.data]);
+        setLength(currentLength + INCREASE_AMOUNT_OF_ITEM);
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   function ProjectItem(props) {
- //trim description to be shorter to fit a certain size of the project item
- let shorterDescription = props.project.description;
- if (shorterDescription.length > MAX_DESCRIPTION_LENGTH) {
-  shorterDescription =
-    shorterDescription.substring(0, MAX_DESCRIPTION_LENGTH - 3).trim() +
-    "...";
-}
-      //return the one item in a given format
+    //return the one item in a given format
     return (
       <Link to={`/project/${props.project.id}`} className="link">
         <div className="bg-white py-0 my-1 px-2">
           <h1>{props.project.projectName}</h1>
-          <p>{shorterDescription}</p>     
+          <p>{props.project.description}</p>
         </div>
       </Link>
     );
