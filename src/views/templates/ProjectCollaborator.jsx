@@ -14,12 +14,18 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ProjectUtils from "../../components/Utils/ProjectUtils";
 import MemberItem from "../../components/Project/MemberItem";
+import Pusher from "pusher-js";
 
 const ProjectCollaborator = (props) => {
     const navigate = useNavigate();
     const { projectId } = props;
+    const [showMessageForm, setShowMessageForm] = useState(false)
     const [data, setData] = useState({
     });
+
+    const pusher = new Pusher("7aacd8aa34fa1abfd9bf", {
+      cluster: "eu",
+    })
 
     useEffect(() => {
       const fetchData = async () => {
@@ -35,10 +41,61 @@ const ProjectCollaborator = (props) => {
       fetchData();
     }, [projectId]);
 
+    const displayMessageForm = () => {
+      if (showMessageForm) setShowMessageForm(false);
+      else setShowMessageForm(true);
+    }
+    const hideMessageForm = () => {
+      setShowMessageForm(false);
+    };
+
+    const { register, handleSubmit } = useForm();
+
+    const createMessage = (formData) => {
+      setShowMessageForm(false);
+    };
+
+    const channel = pusher.subscribe("messages");
+
+    channel.bind("new-message", (data) => {
+      //handle new message
+    })
+
+    pusher.trigger("messages", "new-message", {
+      message: "Hello, world!"
+    })
+
   return (
     <div>
       {data && (
         <div id="Content">
+          {showMessageForm && (
+          <div>
+          <div className="dark" onClick={hideMessageForm}></div>
+          <div className="aboveDark bg-container">
+            <form onSubmit={handleSubmit(createMessage)}>
+              <h4>Message:</h4>
+              <textarea
+                className="mb-4"
+                placeholder="Say something!"
+                {...register("projectDescription")}
+              />
+              <Row>
+                <Col>
+                  <button className="w-100" type="submit">
+                    Post
+                  </button>
+                </Col>
+                <Col>
+                  <button className="w-100" onClick={hideMessageForm}>
+                    Cancel
+                  </button>
+                </Col>
+              </Row>
+            </form>
+          </div>
+        </div>
+        )}
 
           <div id="PrimaryContent">
             <div className="py-0 my-0 px-2">
@@ -70,7 +127,9 @@ const ProjectCollaborator = (props) => {
           <div className="bg-frame m-3">
             <div className="bg-content m-3 p-2" id="SecondaryContent">
               <div className="w-100">
-                <button className="Button">Group Chat</button>
+              <button className="Button" onClick={displayMessageForm}>
+                Group Chat
+              </button>      
               </div>
             </div>
           </div>
