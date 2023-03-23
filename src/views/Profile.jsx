@@ -10,17 +10,27 @@ import { useForm } from "react-hook-form";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [data, setData] = useState({
+  const { userId } = useParams();
+  const [profile, setProfile] = useState({
     profileId: 1,
     profileName: "",
     profileImgSrc: "",
   });
-  
+  const getProfile = async (id) => {
+    axios
+      .get(`https://localhost:7132/api/Users/${id}?viewerId=${2}`)
+      .then((result) => {
+        setProfile(result.data);
+        console.log(profile);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
-    //TODO: add security so not any one can view profile
-    
-  });
-  
+    getProfile(userId);
+  }, [userId]);
 
   const displayCreateForm = () => {
     if (showCreateForm) setShowCreateForm(false);
@@ -40,7 +50,7 @@ const Profile = () => {
       projectName: formData.projectName,
       description: formData.projectDescription,
       categoryName: formData.projectCategoryName,
-      isAvailable: true
+      isAvailable: true,
     };
 
     axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
@@ -48,85 +58,140 @@ const Profile = () => {
     });
   };
 
+  function SkillItem(props) {
+    return (
+      <div className="border border-dark bg-container rounded-10 px-2">
+        <h4>{props.skill.name}</h4>
+      </div>
+    );
+  }
+  function ProjectItem(props) {
+    //return the one item in a given format
+    return (
+      <Link to={`/project/${props.project.id}`} className="link">
+        <div className="border border-dark bg-container rounded-10 px-2">
+          <h4> {props.project.projectName}</h4>
+          <p>{props.project.description}</p>
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <Template>
       <div id="Content">
         {/* if creating a project  */}
         {showCreateForm && (
-          // <div>
-          //   <ProjectForm
-          //   placeholderName = "Insert name..."
-          //   placeholderDescription = "Insert description"
-          //   placeholderProjectType = ""
-          //   confirmButtonText = "Create"
-          //   handleSubmit = {createProject}
-          //   handleCancel = {hideCreateForm}
-          //   register = {register}              
-          //   />
-          // </div>
-
           <div>
-          <div className="dark" onClick={hideCreateForm}></div>
-          <div className="aboveDark bg-container">
-            <form onSubmit={handleSubmit(createProject)}>
-              <h4>Project's name:</h4>
-              <input
-                className="mb-4"
-                placeholder="Insert name..."
-                {...register("projectName", {
-                  required: true,
-                  minLength: 5,
-                  maxLength: 50,
-                })}
-              />
+            <div className="dark" onClick={hideCreateForm}></div>
+            <div className="aboveDark bg-container">
+              <form onSubmit={handleSubmit(createProject)}>
+                <h4>Project's name:</h4>
+                <input
+                  className="mb-4"
+                  placeholder="Insert name..."
+                  {...register("projectName", {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 50,
+                  })}
+                />
 
-              <h4>Project's description:</h4>
-              <textarea
-                className="mb-4"
-                placeholder="Insert description..."
-                {...register("projectDescription")}
-              />
+                <h4>Project's description:</h4>
+                <textarea
+                  className="mb-4"
+                  placeholder="Insert description..."
+                  {...register("projectDescription")}
+                />
 
-              <h4>Project type</h4>
-              <select
-                className="mb-4 w-100"
-                id="Project type"
-                {...register("projectCategoryName")}
-              >
-                <option value="Game">Game</option>
-                <option value="Music">Music</option>
-              </select>
-              <Row>
-                <Col>
-                  <button className="w-100" type="submit">
-                    Create
-                  </button>
-                </Col>
-                <Col>
-                  <button className="w-100" onClick={hideCreateForm}>
-                    Cancel
-                  </button>
-                </Col>
-              </Row>
-            </form>
+                <h4>Project type</h4>
+                <select
+                  className="mb-4 w-100"
+                  id="Project type"
+                  {...register("projectCategoryName")}
+                >
+                  <option value="Game">Game</option>
+                  <option value="Music">Music</option>
+                </select>
+                <Row>
+                  <Col>
+                    <button className="w-100" type="submit">
+                      Create
+                    </button>
+                  </Col>
+                  <Col>
+                    <button className="w-100" onClick={hideCreateForm}>
+                      Cancel
+                    </button>
+                  </Col>
+                </Row>
+              </form>
+            </div>
           </div>
-        </div>
         )}
-          {/* left side */}
+        {/* left side */}
         <div id="PrimaryContent" className="mx-3">
           <div>
-            <h3>User's Profile</h3>
-            <div className="w-80 mx-auto">
-              <img
-                src={data.profileImgSrc}
-                className="w-100"
-                alt="Profile picture"
-              />
-            </div>
-            <h3>Project history</h3>
-            <div id="ProjectHistory" className="bg-container w-100">
-              hello world
-            </div>
+            {profile && (
+              <div>
+                <h3>{profile.userName}'s profile</h3>
+                <div className="w-80 mx-auto">
+                  {profile.profileImgSrc ? (
+                    <img
+                      src={profile.profileImgSrc}
+                      className="w-100"
+                      alt="Profile picture"
+                    />
+                  ) : null}
+                </div>
+
+                <h4>Profile description</h4>
+                <div
+                  style={{
+                    minHeight: "50px",
+                    maxHeight: "200px",
+                    overflow: "auto",
+                  }}
+                  className="bg-container w-100"
+                >
+                  <p>{profile.description}</p>
+                </div>
+
+                {profile.displayingProfile && (
+                  <div>
+                    <h4>Projects</h4>
+                    <div
+                      style={{
+                        minHeight: "50px",
+                        maxHeight: "200px",
+                        overflow: "auto",
+                      }}
+                      className="bg-container"
+                    >
+                      {profile.projects &&
+                        profile.projects.map((item) => (
+                          <ProjectItem key={item.id} project={item} />
+                        ))}
+                    </div>
+
+                    <h4>Skills</h4>
+                    <div
+                      style={{
+                        minHeight: "50px",
+                        maxHeight: "200px",
+                        overflow: "auto",
+                      }}
+                      className="bg-container"
+                    >
+                      {profile.skills &&
+                        profile.skills.map((item) => (
+                          <SkillItem key={item.id} skill={item} />
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         {/* right side */}
@@ -136,23 +201,15 @@ const Profile = () => {
               <button className="Button" onClick={displayCreateForm}>
                 Create Project
               </button>
-              <button className="Button">
-                Edit Project
-              </button>
-              <button className="Button mb-4">
-                Delete Project
-              </button>
-              <button className="Button">
-                Chat
-              </button>            
+              <button className="Button">Edit Project</button>
+              <button className="Button mb-4">Delete Project</button>
+              <button className="Button">Chat</button>
             </div>
           </div>
 
           <div className="bg-content m-3 p-2" id="SecondaryContent">
             <div className="w-100">
-              <button className="Button">
-                Skills
-              </button>            
+              <button className="Button">Skills</button>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ function App() {
           <Route path="/Projects" element={<Projects/>}/>
           <Route path="/Project/:projectId" element={<Project />} />
           <Route path="/LegacyMain" element={<LegacyMain/>}/>
-          <Route path="/Profile/:projectId" element={<Profile/>}/>
+          <Route path="/Profile/:userId" element={<Profile/>}/>
         </Routes>
       </div>
     </BrowserRouter>
