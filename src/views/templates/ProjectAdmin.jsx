@@ -13,9 +13,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ProjectUtils from "../../components/Utils/ProjectUtils";
 
-const ProjectAdmin = (props) => {
+const ProjectAdmin = () => {
   const navigate = useNavigate();
-  const { projectId } = props;
+  const { projectId } = useParams();
 
   const [data, setData] = useState({
   });
@@ -146,6 +146,14 @@ const ProjectAdmin = (props) => {
         </button>
       </div>
       //  </Link>
+    );
+  }
+
+  if (!projectId) {
+    return (
+      <div>
+        <h3>Please select a project first.</h3>
+      </div>
     );
   }
 

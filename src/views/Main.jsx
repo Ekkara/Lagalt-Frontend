@@ -1,7 +1,6 @@
 import React from "react";
 import Template from "./templates/Template";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "../components/Main/MainPageStyle.css";
 import "../components/Template/TemplateStyle.css";

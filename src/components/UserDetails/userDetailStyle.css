@@ -1,0 +1,9 @@
+.user-details {
+    display: inline-block;
+    margin-right: 1rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #495057;
+  }
