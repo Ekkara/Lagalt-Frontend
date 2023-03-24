@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { initializeKeycloak, KeycloakContext, keycloak  } from "../src/keycloak";
+import { initialize as initializeKeycloak, KeycloakContext, default as keycloak } from "../src/keycloak";
 import Loading from "./components/loading/Loading";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,10 +14,10 @@ initializeKeycloak()
   .then(() => { // If No Keycloak Error occurred - Display the App
     root.render(
       <React.StrictMode>
-      <KeycloakContext.Provider value={keycloak}> {/* Add this line */}
-        <App />
-      </KeycloakContext.Provider> {/* Add this line */}
-    </React.StrictMode>
+        <KeycloakContext.Provider value={keycloak}>
+          <App />
+        </KeycloakContext.Provider>
+      </React.StrictMode>
     );
   })
   .catch(() => {
@@ -25,7 +25,3 @@ initializeKeycloak()
       <p>Could Not Connect To Keycloak.</p>
     );
   });
-
-  
-  
-

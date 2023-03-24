@@ -1,29 +1,26 @@
 // keycloak.js
-import Keycloak from "keycloak-js";
-import React, { createContext } from "react";
-const keycloakConfig = {
-  url: "https://lemur-3.cloud-iam.com/auth/",
-  realm: "projectlagaltfullstack",
-  clientId: "test-client",
+import { createContext } from 'react';
+import Keycloak from 'keycloak-js';
+
+export const KeycloakContext = createContext(null);
+
+// NB! Leave the / or the relative path will use the Router path
+const keycloak = new Keycloak("/keycloak.json");
+
+/**
+ * Initialize Keycloak and silently checking for an existing login.
+ * @description Should be called before render() of app.
+ * @returns { Promise<void> } Promise
+ */
+export const initialize = () => {
+    const config = {
+        checkLoginIframe: false,
+        //onLoad: "check-sso",
+        silentCheckSsoRedirectUri:
+            window.location.origin, //+ "/silent-check-sso.html", Enable on deployment!
+    };
+    return keycloak.init(config);
 };
 
-const keycloak = new Keycloak(keycloakConfig);
-
-const initializeKeycloak = () => {
-  return new Promise((resolve, reject) => {
-    keycloak
-      .init({
-        onLoad: "check-sso",
-      })
-      .then((authenticated) => {
-        console.log("Keycloak initialized", authenticated);
-        resolve(keycloak);
-      })
-      .catch((error) => {
-        console.error("Error initializing Keycloak", error);
-        reject(error);
-      });
-  });
-};
-const KeycloakContext = createContext(); // Create the KeycloakContext
-export { keycloak, initializeKeycloak, KeycloakContext  }; // Export the KeycloakContext
+/** @type { Keycloak } keycloak */
+export default keycloak;

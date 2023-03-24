@@ -7,7 +7,7 @@ import keycloak from "../keycloak";
  * @param {{ children: ReactNode, role: string, redirectTo: string }} props
  * @returns {JSX.Element}
  */
-function PrivateRoute({ children, role, redirectTo = "/" }) {
+function Keycloakroute({ children, role, redirectTo = "/" }) {
 
     if (!keycloak.authenticated) {
         return <Navigate replace to={redirectTo} />;
@@ -20,4 +20,4 @@ function PrivateRoute({ children, role, redirectTo = "/" }) {
     return <Navigate replace to={redirectTo} />;
 }
 
-export default PrivateRoute;
+export default Keycloakroute;

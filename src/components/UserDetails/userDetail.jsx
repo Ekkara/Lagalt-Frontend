@@ -21,7 +21,7 @@ const UserDetails = () => {
     <div className="user-details">
       <p>Username: {keycloak.tokenParsed.preferred_username}</p>
       <p>User ID: {keycloak.tokenParsed.sub}</p>
-      {/* <p>Token: {keycloak.token}</p> */}
+      <p>Token: {keycloak.token}</p>
       {/* <button onClick={handleLogout}>Logout</button> */}
     </div>
   );

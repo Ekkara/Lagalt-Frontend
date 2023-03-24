@@ -8,7 +8,7 @@ export const getUserInfo = async () => {
       await keycloak.updateToken();
     }
 
-    const response = await fetch("https://localhost:7240/api/v1/Users", {
+    const response = await fetch("https://localhost:7132/api/v1/Users", {
       method: 'GET',
       headers: createHeaders()
     });
@@ -37,7 +37,7 @@ export const getUserById = async (userId) => {
       await keycloak.updateToken();
     }
 
-    const response = await fetch(`https://localhost:7240/api/v1/Users/${userId}`, {
+    const response = await fetch(`https://localhost:7132/api/v1/Users/${userId}`, {
       method: 'GET',
       headers: createHeaders()
     });
