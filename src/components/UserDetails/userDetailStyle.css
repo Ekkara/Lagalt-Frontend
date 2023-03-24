@@ -1,9 +1,15 @@
 .user-details {
-    display: inline-block;
-    margin-right: 1rem;
-    padding: 0.25rem 0.5rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    color: #495057;
-  }
+  display: inline-block;
+  margin-right: 1rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: #495057;
+  word-wrap: break-word;
+  max-width: 150px; /* Adjust this value based on your desired container width */
+  max-height: 90px; /* Adjust this value based on your desired container height */
+  overflow: auto;
+}
+
+

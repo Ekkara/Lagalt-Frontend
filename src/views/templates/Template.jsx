@@ -29,6 +29,7 @@ const Template = ({ children,  projectId }) => {
         <Link to="/Main" className="btn btn-primary">
           home
         </Link>
+        <UserDetails />
         <div id="search-field">
           <input type="text" placeholder="Search..."></input>
         </div>
@@ -36,15 +37,14 @@ const Template = ({ children,  projectId }) => {
           Profile
         </Link>
         {keycloak.authenticated ? (
-          <>
-           <UserDetails />
+          <>       
           <button className="btn btn-primary" onClick={() => keycloak.logout()}>
             LogOut
           </button>
           <NavigationMenu  projectId={projectId}/>
           </>
         ) : (
-          ""
+         ""
         )}
       </header>
       <div className="d-flex same-height">
