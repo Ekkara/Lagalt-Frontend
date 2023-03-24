@@ -6,6 +6,8 @@ export const KeycloakContext = createContext(null);
 
 // NB! Leave the / or the relative path will use the Router path
 const keycloak = new Keycloak("/keycloak.json");
+// keycloak.loadUserProfile().then((profile)=>{console.log(profile)});
+
 
 /**
  * Initialize Keycloak and silently checking for an existing login.
