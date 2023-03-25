@@ -74,6 +74,7 @@ const ProjectLoggedIn = (props) => {
   console.log(data);
   return (
     <div>
+      Logged in
       {data && (
         <div id="Content">
           {showJoinForm && (

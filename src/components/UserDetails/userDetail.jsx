@@ -10,7 +10,7 @@ const UserDetails = () => {
 
   const handleLogout = () => {
     keycloak.logout();
-    navigate("/Main"); // Navigate back to the main page
+    navigate("/"); // Navigate back to the main page
   };
 
   if (!keycloak.authenticated) {

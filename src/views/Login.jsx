@@ -6,7 +6,7 @@ const Login = () => {
   const navigate = useNavigate();
 useEffect(() => {
     if (keycloak.authenticated) {
-      navigate("/Main")
+      navigate("/")
     }
   }, [])
   return (

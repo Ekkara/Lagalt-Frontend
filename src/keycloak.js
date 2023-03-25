@@ -1,12 +1,14 @@
 // keycloak.js
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 import Keycloak from 'keycloak-js';
+import axios from 'axios';
+
 
 export const KeycloakContext = createContext(null);
 
 // NB! Leave the / or the relative path will use the Router path
 const keycloak = new Keycloak("/keycloak.json");
-
+export var idToken = -1;
 /**
  * Initialize Keycloak and silently checking for an existing login.
  * @description Should be called before render() of app.
@@ -19,6 +21,23 @@ export const initialize = () => {
         silentCheckSsoRedirectUri:
             window.location.origin, //+ "/silent-check-sso.html", Enable on deployment!
     };
+    //when logging in, fetch the index of the user, if user don't exist with this token
+    //one will be generated.
+    keycloak.onAuthSuccess = async function(){
+        await axios
+          .get(`https://localhost:7132/GetId?keycloakId=${keycloak.tokenParsed.sub}&username=${keycloak.tokenParsed.preferred_username}`)
+          .then((result) => {
+            idToken = result.data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    }
+
+    //when logging out, set the global token to an invalid index
+    keycloak.onAuthLogout = function(){
+        idToken = -1;
+    }
     return keycloak.init(config);
 };
 

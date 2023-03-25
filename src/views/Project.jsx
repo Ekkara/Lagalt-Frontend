@@ -16,16 +16,12 @@ import ProjectLoggedIn from "./templates/ProjectLoggedIn";
 import ProjectCollaborator from "./templates/ProjectCollaborator";
 import ProjectAdmin from "./templates/ProjectAdmin";
 import ProjectUtils from "../components/Utils/ProjectUtils";
+import keycloak from "../keycloak";
+import { getProjectRole } from "../api/project";
 
 const Project = () => {
   const { projectId } = useParams();
   const [data, setData] = useState();
-  //0 - not logged in
-  //1 - user not member
-  //2 - member
-  //3 - admin
-
-  const loggedInStatus = 1;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,22 +41,26 @@ const Project = () => {
     if (!data) {
       return <ProjectNotFound />;
     } else {
-      switch (loggedInStatus) {
-        case 1:
-          return <ProjectLoggedIn projectId={projectId} />;
-        
+      if (keycloak.authenticated) {
+        const loggedInStatus = getProjectRole(projectId).finally(() => {
+          console.log(loggedInStatus);
+        });
+        switch (loggedInStatus) {
           case 2:
-          return <ProjectCollaborator projectId={projectId} />;
+            return <ProjectCollaborator projectId={projectId} />;
 
-        case 3:
-          return <ProjectAdmin projectId={projectId} />;
+          case 3:
+            return <ProjectAdmin projectId={projectId} />;
 
-        default:
-          return <ProjectNotLoggedIn projectId={projectId} />;
+          default:
+            return <ProjectLoggedIn projectId={projectId} />; //not a member in the project (case 1)
+        }
+      } else {
+        return <ProjectNotLoggedIn projectId={projectId} />; //not logged in
       }
     }
   };
 
-  return <Template>{getProjectWindow()}</Template>;
+  return (<Template>{getProjectWindow()}</Template>);
 };
 export default Project;

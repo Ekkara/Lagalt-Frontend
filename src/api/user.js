@@ -1,6 +1,7 @@
 import keycloak from '../keycloak';
 import { createHeaders } from "./apiIndex";
 
+
 export const getUserInfo = async () => {
   try {
     // Refresh token if it is expired or will expire soon

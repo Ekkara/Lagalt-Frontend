@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import { initialize as initializeKeycloak, KeycloakContext, default as keycloak } from "../../keycloak";
 import UserDetails from "../../components/UserDetails/userDetail";
-import NavigationMenu from '../../components/Navbar/NavigationMenu';
+import NavigationMenu from "../../components/Navbar/NavigationMenu";
 import "../../components/Template/TemplateStyle.css";
 import keycloak from "../../keycloak";
 
-
-const Template = ({ children,  projectId }) => {
-  // const navigate = useNavigate(); // Create a new navigate instance
+const Template = ({ children }) => {
+  const navigate = useNavigate(); // Create a new navigate instance
+  
 
   // const handleLogin = () => {
   //   initializeKeycloak()
@@ -23,28 +23,34 @@ const Template = ({ children,  projectId }) => {
   //       console.error("Error initializing Keycloak", error);
   //     });
   // };
+
+ 
+
+
   return (
     <div className="site-container">
       <header>
-        <Link to="/Main" className="btn btn-primary">
+        <Link to="/" className="btn btn-primary">
           home
         </Link>
         <UserDetails />
         <div id="search-field">
           <input type="text" placeholder="Search..."></input>
         </div>
-        <Link to="/Profile/[user]" className="btn btn-primary">
+        {/* <Link to="/Profile/[user]" className="btn btn-primary">
           Profile
-        </Link>
+        </Link> */}
         {keycloak.authenticated ? (
-          <>       
-          <button className="btn btn-primary" onClick={() => keycloak.logout()}>
-            LogOut
-          </button>
-          <NavigationMenu  projectId={projectId}/>
-          </>
+          <NavigationMenu />
         ) : (
-         ""
+          <button
+          className="btn btn-primary"
+          onClick={() =>
+            keycloak.login()
+          }
+        >
+          Login
+        </button>
         )}
       </header>
       <div className="d-flex same-height">

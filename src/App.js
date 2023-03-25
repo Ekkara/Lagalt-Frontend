@@ -13,6 +13,8 @@ import Projects from "./Projects";
 import Project from "./views/Project";
 import ProjectAdmin from "./views/templates/ProjectAdmin"
 
+
+
 //TODO: This should not exist in final product
 import LegacyMain from "./components/_Temp/LegacyMain";
 import Profile from "./views/Profile";
@@ -46,16 +48,15 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-        <Route path="/" element={<Login />} /> {/* Set Main as the default route */}
+        <Route path="/" element={<Main />} />
           {/* <Route path="/Login" element={<Keycloakroute role={ROLES.User}><Login/></Keycloakroute>} /> */}
           {/* <Route path="/Main" element={<Keycloakroute role={ROLES.User}><Main/></Keycloakroute>} /> */}
-          <Route path="/Main" element={<Main/>} />
-          <Route path="/Projects" element={<Keycloakroute role={ROLES.User}><Projects/></Keycloakroute>} />
-          <Route path="/Project/:projectId" element={<Keycloakroute role={ROLES.User}><Project/></Keycloakroute>} />
-          <Route path="/LegacyMain" element={<Keycloakroute role={ROLES.User}><LegacyMain/></Keycloakroute>} />
-          <Route path="/Profile/:profileId" element={<Keycloakroute role={ROLES.User}><Profile/></Keycloakroute>} />
-          <Route path="/projectAdmin/:projectId/admin" element={<ProjectAdmin/>} />
-          <Route path="/projectAdmin/:projectId/admin" element={<Keycloakroute role={ROLES.User}><ProjectAdmin/></Keycloakroute>} />
+          {/* <Route path="/Main" element={<Main/>} /> */}
+          {/* <Route path="/Projects" element={<Keycloakroute role={ROLES.User}><Projects/></Keycloakroute>} /> */}
+          <Route path="/Project/:projectId" element={<Project/>} />
+          <Route path="/Profile/:userId" element={<Keycloakroute><Profile/></Keycloakroute>} />
+          {/* <Route path="/projectAdmin/:projectId/admin" element={<ProjectAdmin/>} /> */}
+          {/* <Route path="/projectAdmin/:projectId/admin" element={<Keycloakroute role={ROLES.User}><ProjectAdmin/></Keycloakroute>} /> */}
         </Routes>
       </div>
     </BrowserRouter>
