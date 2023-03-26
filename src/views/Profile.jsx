@@ -7,25 +7,26 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
+import {
+  getUserById,
+  addSkillToUser,
+  updateUser,
+  removeSkillFromUser,
+} from "../api/user";
+import keycloak, { idToken } from "../keycloak";
+import { createProject } from "../api/project";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showAddSkillForm, setShowAddSkillForm] = useState(false);
+  const [showEditProfileForm, setShowEditProfileForm] = useState(false);
+
   const { userId } = useParams();
-  const [profile, setProfile] = useState({
-    profileId: 1,
-    profileName: "",
-    profileImgSrc: "",
-  });
+  const [profile, setProfile] = useState({});
   const getProfile = async (id) => {
-    axios
-      .get(`https://localhost:7132/api/Users/${id}?viewerId=${2}`)
-      .then((result) => {
-        setProfile(result.data);
-        console.log(profile);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const data = await getUserById(id);
+    setProfile(data);
+    console.log(data);
   };
 
   useEffect(() => {
@@ -42,29 +43,71 @@ const Profile = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const createProject = (formData) => {
+  const createProjectSubmit = async (formData) => {
     setShowCreateForm(false);
 
     const data = {
-      ownerId: 1,
+      ownerId: idToken,
       projectName: formData.projectName,
       description: formData.projectDescription,
       categoryName: formData.projectCategoryName,
       isAvailable: true,
     };
-
-    axios.post("https://localhost:7132/api/Projects", data).catch((error) => {
-      console.error("Error while adding:", error);
-    });
+    await createProject(data);
+    getProfile(idToken);
   };
 
+  const displayAddSkillForm = () => {
+    if (showAddSkillForm) setShowAddSkillForm(false);
+    else setShowAddSkillForm(true);
+  };
+
+  const hideAddSkillForm = () => {
+    setShowAddSkillForm(false);
+  };
+
+  const addSkill = async (formData) => {
+    setShowAddSkillForm(false);
+    await addSkillToUser(formData.skill);
+    getProfile(idToken);
+  };
+
+  const displayEditProfileForm = () => {
+    if (showEditProfileForm) setShowEditProfileForm(false);
+    else setShowEditProfileForm(true);
+  };
+  const hideEditProfileForm = () => {
+    setShowEditProfileForm(false);
+  };
+
+  const editProfile = async (formData) => {
+    setShowEditProfileForm(false);
+    const data = {
+      description: formData.newProfileDescription,
+      isProfileHiden: !(formData.newIsProfileHidden === false),
+    };
+    await updateUser(data);
+    getProfile(idToken);
+  };
+  const removeSkill = async (name) => {
+    await removeSkillFromUser(name);
+    await getProfile(idToken);
+  };
   function SkillItem(props) {
     return (
-      <div className="border border-dark bg-container rounded-10 px-2">
+      <div className="border border-dark bg-container rounded-10 px-2 position-relative">
         <h4>{props.skill.name}</h4>
+        <button className="bg-light rounded-10 px-2 removeKey"
+          onClick={() => {
+            removeSkill(props.skill.name);
+          }}
+        >
+          X
+        </button>
       </div>
     );
   }
+
   function ProjectItem(props) {
     //return the one item in a given format
     return (
@@ -85,7 +128,7 @@ const Profile = () => {
           <div>
             <div className="dark" onClick={hideCreateForm}></div>
             <div className="aboveDark bg-container">
-              <form onSubmit={handleSubmit(createProject)}>
+              <form onSubmit={handleSubmit(createProjectSubmit)}>
                 <h4>Project's name:</h4>
                 <input
                   className="mb-4"
@@ -121,6 +164,70 @@ const Profile = () => {
                   </Col>
                   <Col>
                     <button className="w-100" onClick={hideCreateForm}>
+                      Cancel
+                    </button>
+                  </Col>
+                </Row>
+              </form>
+            </div>
+          </div>
+        )}
+        {showAddSkillForm && (
+          <div>
+            <div className="dark" onClick={hideAddSkillForm}></div>
+            <div className="aboveDark bg-container">
+              <form onSubmit={handleSubmit(addSkill)}>
+                <h4>New skill:</h4>
+                <textarea
+                  className="mb-4"
+                  placeholder="Insert skill..."
+                  {...register("skill", {
+                    required: true,
+                    minLength: 2,
+                  })}
+                />
+                <Row>
+                  <Col>
+                    <button className="w-100" type="submit">
+                      Add skill
+                    </button>
+                  </Col>
+                  <Col>
+                    <button className="w-100" onClick={hideAddSkillForm}>
+                      Cancel
+                    </button>
+                  </Col>
+                </Row>
+              </form>
+            </div>
+          </div>
+        )}
+        {showEditProfileForm && (
+          <div>
+            <div className="dark" onClick={hideEditProfileForm}></div>
+            <div className="aboveDark bg-container">
+              <form onSubmit={handleSubmit(editProfile)}>
+                <h4>New description:</h4>
+                <textarea
+                  className="mb-4"
+                  placeholder="Insert new description..."
+                  defaultValue={profile.description}
+                  {...register("newProfileDescription")}
+                />
+                <h4>Hide profile:</h4>
+                <input
+                  type="checkbox"
+                  defaultChecked={profile.isProfileHiden}
+                  {...register("newIsProfileHidden")}
+                />
+                <Row>
+                  <Col>
+                    <button className="w-100" type="submit">
+                      Confirm
+                    </button>
+                  </Col>
+                  <Col>
+                    <button className="w-100" onClick={hideEditProfileForm}>
                       Cancel
                     </button>
                   </Col>
@@ -195,24 +302,35 @@ const Profile = () => {
           </div>
         </div>
         {/* right side */}
-        <div className="bg-frame m-3">
-          <div className="bg-content m-3 p-2" id="SecondaryContent">
-            <div className="w-100">
-              <button className="Button" onClick={displayCreateForm}>
-                Create Project
-              </button>
-              <button className="Button">Edit Project</button>
-              <button className="Button mb-4">Delete Project</button>
-              <button className="Button">Chat</button>
+        {idToken.toString() === userId && (
+          <div className="bg-frame m-3">
+            <div className="bg-content m-3 p-2" id="SecondaryContent">
+              <div className="w-100">
+                <button className="Button" onClick={displayCreateForm}>
+                  Create Project
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div className="bg-content m-3 p-2" id="SecondaryContent">
-            <div className="w-100">
-              <button className="Button">Skills</button>
+            <div className="bg-content m-3 p-2" id="SecondaryContent">
+              <div className="w-100">
+                <button className="Button" onClick={displayEditProfileForm}>
+                  Edit profile
+                </button>
+              </div>
+              <div className="w-100">
+                <button className="Button" onClick={displayAddSkillForm}>
+                  Add skill
+                </button>
+              </div>
+              <div className="w-100">
+                <button className="Button" onClick={() => keycloak.logout()}>
+                  Log out
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Template>
   );

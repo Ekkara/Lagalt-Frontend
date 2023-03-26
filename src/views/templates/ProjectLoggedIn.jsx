@@ -12,8 +12,9 @@ import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import ProjectUtils from "../../components/Utils/ProjectUtils";
 import MemberItem from "../../components/Project/MemberItem";
+import { getNonSecretProjectView } from "../../api/project";
+import { idToken } from "../../keycloak";
 
 const ProjectLoggedIn = (props) => {
   const { projectId } = props;
@@ -22,9 +23,7 @@ const ProjectLoggedIn = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/NonCollaboratorProjectView`
-        );
+        const data = await getNonSecretProjectView(projectId);
         setData(data);
       } catch {
         setData(null);
@@ -57,21 +56,17 @@ const ProjectLoggedIn = (props) => {
       .put(
         `https://localhost:7132/api/Projects/${projectId}/AddProjectApplication`,
         {
-          applicantId: 1,
+          applicantId: idToken,
           message: formData.message,
         }
       )
       .then(async () => {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
-        );
-        setData(data);
       })
       .catch((error) => {
         console.error("Error updating project:", error);
       });
   };
-  console.log(data);
+
   return (
     <div>
       Logged in

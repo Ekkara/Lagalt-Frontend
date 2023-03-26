@@ -54,7 +54,8 @@ function App() {
           {/* <Route path="/Main" element={<Main/>} /> */}
           {/* <Route path="/Projects" element={<Keycloakroute role={ROLES.User}><Projects/></Keycloakroute>} /> */}
           <Route path="/Project/:projectId" element={<Project/>} />
-          <Route path="/Profile/:userId" element={<Keycloakroute><Profile/></Keycloakroute>} />
+          <Route path="/Profile/:userId" element={<Profile/>} />
+          {/* <Route path="/Profile/:userId" element={<Keycloakroute><Profile/></Keycloakroute>} /> */}
           {/* <Route path="/projectAdmin/:projectId/admin" element={<ProjectAdmin/>} /> */}
           {/* <Route path="/projectAdmin/:projectId/admin" element={<Keycloakroute role={ROLES.User}><ProjectAdmin/></Keycloakroute>} /> */}
         </Routes>

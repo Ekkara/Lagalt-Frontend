@@ -12,7 +12,6 @@ import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import ProjectUtils from "../../components/Utils/ProjectUtils";
 
 const ProjectNotFound = (props) => {
     const navigate = useNavigate();

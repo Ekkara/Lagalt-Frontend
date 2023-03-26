@@ -11,14 +11,26 @@ import { Row, Col } from "react-bootstrap";
 import "../../components/Profile/Profile.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import ProjectUtils from "../../components/Utils/ProjectUtils";
+import { getAdminView, removeUserFromProject } from "../../api/project";
 
 const ProjectAdmin = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
 
-  const [data, setData] = useState({
-  });
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAdminView(projectId);
+        setData(data);
+      } catch {
+        setData(null);
+      }
+    };
+    fetchData();
+  }, [projectId]);
+
   const [showEditForm, setShowEditForm] = useState(false);
 
   const displayEditForm = () => {
@@ -43,12 +55,10 @@ const ProjectAdmin = () => {
         description: formData.projectDescription,
         categoryName: formData.projectCategoryName,
         isAvailable: !(formData.projectAvailability === false),
-        repositoryLink: formData.projectRepositoryLink,        
+        repositoryLink: formData.projectRepositoryLink,
       })
       .then(async () => {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
-        );
+        const data = await getAdminView(projectId);
         setData(data);
       })
       .catch((error) => {
@@ -63,32 +73,34 @@ const ProjectAdmin = () => {
       )
     ) {
       axios.delete("https://localhost:7132/api/Projects/" + projectId);
-      navigate("/main");
+      navigate("/");
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
-        );
-        setData(data);
-      } catch {
-        setData(null);
-      }
-    };
-    fetchData();
-  }, [projectId]);
+  const removeMember = async (userId) => {
+    await removeUserFromProject(userId, projectId);
+    const data = await getAdminView(projectId);
+    setData(data);
+  };
 
   function MemberItem(props) {
     //return the one item in a given format
     return (
-      //  <Link to={`/project/${props.project.id}`} className="link">
-      <div className="border border-dark bg-container rounded-10 px-2">
-        <h4> {props.member.userName}</h4>
-      </div>
-      //  </Link>
+      <Link to={`/profile/${props.member.id}`} className="link">
+        <div className="border border-dark bg-container rounded-10 px-2 position-relative">
+          <h4> {props.member.userName}</h4>
+          {props.member.id !== data.ownerId && (
+            <button
+              className="bg-light rounded-10 px-2 removeKey"
+              onClick={() => {
+                removeMember(props.member.id);
+              }}
+            >
+              X
+            </button>
+          )}
+        </div>
+      </Link>
     );
   }
 
@@ -100,9 +112,7 @@ const ProjectAdmin = () => {
         {}
       )
       .then(async () => {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
-        );
+        const data = await getAdminView(projectId);
         setData(data);
       })
       .catch((error) => {
@@ -119,9 +129,7 @@ const ProjectAdmin = () => {
         {}
       )
       .then(async () => {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/AdminProjectView`
-        );
+        const data = await getAdminView(projectId);
         setData(data);
       })
       .catch((error) => {
@@ -133,7 +141,7 @@ const ProjectAdmin = () => {
   function ApplicantItem(props) {
     //return the one item in a given format
     return (
-      //  <Link to={`/project/${props.project.id}`} className="link">
+        <Link to={`/profile/${props.applicant.applicantId}`} className="link">
       <div className="border border-dark rounded-10 px-2 mb-1">
         <h5>{props.applicant.applicantName}</h5>
         <p> {props.applicant.message} </p>
@@ -145,7 +153,7 @@ const ProjectAdmin = () => {
           Decline
         </button>
       </div>
-      //  </Link>
+        </Link>
     );
   }
 
@@ -205,8 +213,7 @@ const ProjectAdmin = () => {
                   <h4>Allow Applications</h4>
                   <input
                     type="checkbox"
-                    //value="true"
-                    defaultValue={data.isAvailable}
+                    defaultChecked={data.isAvailable}
                     {...register("projectAvailability")}
                   />
                   <Row>
@@ -237,8 +244,8 @@ const ProjectAdmin = () => {
               </div>
               {data.repositoryLink && (
                 <div className="bg-container mt-2 p-1 rounded-10">
-                  <h3>Repository:</h3> 
-                    <p>{data.repositoryLink}</p>
+                  <h3>Repository:</h3>
+                  <p>{data.repositoryLink}</p>
                 </div>
               )}
               <div className="bg-container mt-2 p-1 rounded-10 members">

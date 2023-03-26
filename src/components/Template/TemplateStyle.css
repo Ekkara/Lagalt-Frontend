@@ -32,6 +32,12 @@
   border-radius: 50px;
 }
 
+.removeKey{
+position: absolute;
+top: 4px;
+right: 5px;
+}
+
 
 #Content {
   display: flex;

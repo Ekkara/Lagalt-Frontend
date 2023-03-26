@@ -15,22 +15,30 @@ import ProjectNotLoggedIn from "./templates/ProjectNotLoggedIn";
 import ProjectLoggedIn from "./templates/ProjectLoggedIn";
 import ProjectCollaborator from "./templates/ProjectCollaborator";
 import ProjectAdmin from "./templates/ProjectAdmin";
-import ProjectUtils from "../components/Utils/ProjectUtils";
 import keycloak from "../keycloak";
 import { getProjectRole } from "../api/project";
+import { projectExist } from "../api/project";
 
 const Project = () => {
   const { projectId } = useParams();
   const [data, setData] = useState();
+  const [projectRole, setProjectRole] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await ProjectUtils.getData(
-          `https://localhost:7132/api/Projects/${projectId}/ProjectExist`
-        );
+        const data = await projectExist(projectId);
         setData(data);
-      } catch {
+        if (data && keycloak.authenticated) {
+            const newProjectRole = await getProjectRole(projectId);
+            setProjectRole(newProjectRole);
+            console.log(newProjectRole);
+        }
+        else{
+          setProjectRole(0);
+        }
+      } catch (e) {
+        console.log(e);
         setData(null);
       }
     };
@@ -42,25 +50,26 @@ const Project = () => {
       return <ProjectNotFound />;
     } else {
       if (keycloak.authenticated) {
-        const loggedInStatus = getProjectRole(projectId).finally(() => {
-          console.log(loggedInStatus);
-        });
-        switch (loggedInStatus) {
+        switch (projectRole) {
           case 2:
+            console.log("fetching member view");
             return <ProjectCollaborator projectId={projectId} />;
 
           case 3:
+            console.log("fetching admin view");
             return <ProjectAdmin projectId={projectId} />;
 
           default:
+            console.log("fetching logged in view");
             return <ProjectLoggedIn projectId={projectId} />; //not a member in the project (case 1)
         }
       } else {
+        console.log("fetching not logged in view");
         return <ProjectNotLoggedIn projectId={projectId} />; //not logged in
       }
     }
   };
 
-  return (<Template>{getProjectWindow()}</Template>);
+  return <Template>{projectRole !== null && getProjectWindow()}</Template>;
 };
 export default Project;

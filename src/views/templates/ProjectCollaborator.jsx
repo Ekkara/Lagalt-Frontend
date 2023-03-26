@@ -12,8 +12,8 @@ import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import ProjectUtils from "../../components/Utils/ProjectUtils";
 import MemberItem from "../../components/Project/MemberItem";
+import { getCollaboratorView } from "../../api/project";
 
 const ProjectCollaborator = (props) => {
     const navigate = useNavigate();
@@ -24,10 +24,9 @@ const ProjectCollaborator = (props) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const data = await ProjectUtils.getData(
-            `https://localhost:7132/api/Projects/${projectId}/CollaboratorProjectView`
-          );
+          const data = await getCollaboratorView(projectId);
           setData(data);
+          console.log(data);
         } catch {
           setData(null);
         }
