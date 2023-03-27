@@ -19,29 +19,6 @@ import Profile from "./views/Profile";
 
 function App() {
 
-  // const [user, setUser] = useState()
-  // const [loading, setLoading] = useState(true); // Add this line
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = await getUserInfo();
-  //     storageSave(STORAGE_KEY_USER, data);
-  //     setUser(data);
-  //     setLoading(false); // Set loading to false once user data has been fetched
-  //   };
-
-  //   const userData = storageRead(STORAGE_KEY_USER);
-  //   if (userData) {
-  //     setUser(userData);
-  //     setLoading(false); // Set loading to false if user data is already available in storage
-  //   } else {
-  //     fetchData();
-  //   }
-  // }, []);
-
-  // if (loading) {
-  //   return <Loading message="Loading..." />;
-  // }
   return (
     <BrowserRouter>
       <div className="App">
@@ -53,7 +30,9 @@ function App() {
           <Route path="/Projects" element={<Keycloakroute role={ROLES.User}><Projects/></Keycloakroute>} />
           <Route path="/Project/:projectId" element={<Keycloakroute role={ROLES.User}><Project/></Keycloakroute>} />
           <Route path="/LegacyMain" element={<Keycloakroute role={ROLES.User}><LegacyMain/></Keycloakroute>} />
-          <Route path="/Profile/:profileId" element={<Keycloakroute role={ROLES.User}><Profile/></Keycloakroute>} />
+          {/* <Route path="/Profile/:profileId" element={<Keycloakroute role={ROLES.User}><Profile/></Keycloakroute>} /> */}
+          <Route path="/Profile/:userId" element={<Profile />} />
+
           <Route path="/projectAdmin/:projectId/admin" element={<ProjectAdmin/>} />
           <Route path="/projectAdmin/:projectId/admin" element={<Keycloakroute role={ROLES.User}><ProjectAdmin/></Keycloakroute>} />
         </Routes>

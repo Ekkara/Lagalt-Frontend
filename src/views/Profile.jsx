@@ -7,6 +7,7 @@ import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
+import keycloak from "../keycloak";
 
 const Profile = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -16,21 +17,40 @@ const Profile = () => {
     profileName: "",
     profileImgSrc: "",
   });
-  const getProfile = async (id) => {
-    axios
-      .get(`https://localhost:7132/api/Users/${id}?viewerId=${2}`)
-      .then((result) => {
-        setProfile(result.data);
-        console.log(profile);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const getProfile = async (id) => {
+  //   axios
+  //     .get(`https://localhost:7132/api/Users/${id}?viewerId=${2}`)
+  //     .then((result) => {
+  //       setProfile(result.data);
+  //       console.log(profile);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
+  const fetchUserById = async (id) => {
+    try {
+      const token = keycloak.token;
+      const response = await axios.get(
+        // `https://localhost:7132/api/Users/${id}?viewerId=${2}`,
+        `https://localhost:7132/api/Users/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setProfile(response.data);
+      console.log(profile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   useEffect(() => {
-    getProfile(userId);
+    fetchUserById(userId);
   }, [userId]);
+  
+  // useEffect(() => {
+  //   getProfile(userId);
+  // }, [userId]);
 
   const displayCreateForm = () => {
     if (showCreateForm) setShowCreateForm(false);
