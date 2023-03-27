@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { async } from "q";
+import { loadMainPageProjects } from "../api/project";
 
 const Main = () => {
   const START_AMOUNT_OF_ITEMS = 10;
@@ -36,19 +37,9 @@ const Main = () => {
   }, [currentLength]);
 
   const getData = async (from, to) => {
-    await axios
-      .get(
-        `https://localhost:7132/api/Projects/ProjectsForMainPage?start=${from}&range=${
-          to - from
-        }`
-      )
-      .then((result) => {
-        setData([...data, ...result.data]);
-        setLength(currentLength + INCREASE_AMOUNT_OF_ITEM);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      const result = await loadMainPageProjects(from, to);
+      setData([...data, ...result.data]);
+      setLength(currentLength + INCREASE_AMOUNT_OF_ITEM);
   };
 
   function ProjectItem(props) {

@@ -13,7 +13,8 @@ import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MemberItem from "../../components/Project/MemberItem";
-import { getCollaboratorView } from "../../api/project";
+import { getCollaboratorView, removeUserFromProject } from "../../api/project";
+import { currentUserId } from "../../keycloak";
 
 const ProjectCollaborator = (props) => {
     const navigate = useNavigate();
@@ -33,6 +34,17 @@ const ProjectCollaborator = (props) => {
       };
       fetchData();
     }, [projectId]);
+
+    const leaveProjectHandler = async() =>{
+      if (
+        window.confirm(
+          "Are you sure you wish to leave the project, you will no longer see any collaborator related information"
+        )
+      ) {
+      await removeUserFromProject(currentUserId, projectId);
+      navigate("/");
+      }
+    }
 
   return (
     <div>
@@ -70,6 +82,11 @@ const ProjectCollaborator = (props) => {
             <div className="bg-content m-3 p-2" id="SecondaryContent">
               <div className="w-100">
                 <button className="Button">Group Chat</button>
+              </div>
+            </div>
+            <div className="bg-content m-3 p-2" id="SecondaryContent">
+              <div className="w-100">
+                <button className="Button" onClick={leaveProjectHandler}>Leave Project</button>
               </div>
             </div>
           </div>

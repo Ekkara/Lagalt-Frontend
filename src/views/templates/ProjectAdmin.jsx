@@ -11,7 +11,14 @@ import { Row, Col } from "react-bootstrap";
 import "../../components/Profile/Profile.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { getAdminView, removeUserFromProject } from "../../api/project";
+import {
+  acceptApplication,
+  declineApplication,
+  deleteProject,
+  editProject,
+  getAdminView,
+  removeUserFromProject,
+} from "../../api/project";
 
 const ProjectAdmin = () => {
   const navigate = useNavigate();
@@ -44,35 +51,28 @@ const ProjectAdmin = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const editProject = async (formData) => {
+  const editProjectHandler = async (formData) => {
     setShowEditForm(false);
 
-    console.log(formData);
-
-    axios
-      .put("https://localhost:7132/api/Projects/" + projectId, {
-        projectName: formData.projectName,
-        description: formData.projectDescription,
-        categoryName: formData.projectCategoryName,
-        isAvailable: !(formData.projectAvailability === false),
-        repositoryLink: formData.projectRepositoryLink,
-      })
-      .then(async () => {
-        const data = await getAdminView(projectId);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Error updating project:", error);
-      });
+    const newData = {
+      projectName: formData.projectName,
+      description: formData.projectDescription,
+      categoryName: formData.projectCategoryName,
+      repositoryLink: formData.projectRepositoryLink,
+      isAvailable: !(formData.projectAvailability === false),
+    };
+    await editProject(projectId, newData);
+    const data = await getAdminView(projectId);
+    setData(data);
   };
 
-  const deleteProject = () => {
+  const deleteProjectHandler = async() => {
     if (
       window.confirm(
         "Are you sure you wish to delete this project? This can't be undone!"
       )
     ) {
-      axios.delete("https://localhost:7132/api/Projects/" + projectId);
+      await deleteProject(projectId);
       navigate("/");
     }
   };
@@ -86,9 +86,10 @@ const ProjectAdmin = () => {
   function MemberItem(props) {
     //return the one item in a given format
     return (
-      <Link to={`/profile/${props.member.id}`} className="link">
         <div className="border border-dark bg-container rounded-10 px-2 position-relative">
+         <Link to={`/profile/${props.member.id}`} className="link">
           <h4> {props.member.userName}</h4>
+          </Link>
           {props.member.id !== data.ownerId && (
             <button
               className="bg-light rounded-10 px-2 removeKey"
@@ -100,60 +101,40 @@ const ProjectAdmin = () => {
             </button>
           )}
         </div>
-      </Link>
+      
     );
   }
 
-  const acceptApplicant = (applicantId) => {
-    console.log("accept1");
-    axios
-      .put(
-        `https://localhost:7132/api/Projects/${applicantId}/AcceptProjectApplication`,
-        {}
-      )
-      .then(async () => {
-        const data = await getAdminView(projectId);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Error updating project:", error);
-      });
-    console.log("accept2");
+  const acceptApplicationHandler = async (applicationId) => {
+    acceptApplication(applicationId);
+    const data = await getAdminView(projectId);
+    setData(data);
   };
 
-  const declineApplicant = (applicantId) => {
-    console.log("decline 1");
-    axios
-      .put(
-        `https://localhost:7132/api/Projects/${applicantId}/RemoveProjectApplicationFromProject`,
-        {}
-      )
-      .then(async () => {
-        const data = await getAdminView(projectId);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Error updating project:", error);
-      });
-    console.log("decline 2");
+  const declineApplicantHandler = async (applicationId) => {
+    await declineApplication(applicationId);
+    const data = await getAdminView(projectId);
+    setData(data);
   };
 
   function ApplicantItem(props) {
     //return the one item in a given format
     return (
-        <Link to={`/profile/${props.applicant.applicantId}`} className="link">
-      <div className="border border-dark rounded-10 px-2 mb-1">
-        <h5>{props.applicant.applicantName}</h5>
-        <p> {props.applicant.message} </p>
+      
+        <div className="border border-dark rounded-10 px-2 mb-1">
+          <Link to={`/profile/${props.applicant.applicantId}`} className="link">
+          <h5>{props.applicant.applicantName}</h5>
+          <p> {props.applicant.message} </p>
+          </Link>
 
-        <button onClick={() => acceptApplicant(props.applicant.id)}>
-          Accept
-        </button>
-        <button onClick={() => declineApplicant(props.applicant.id)}>
-          Decline
-        </button>
-      </div>
-        </Link>
+          <button onClick={() => acceptApplicationHandler(props.applicant.id)}>
+            Accept
+          </button>
+          <button onClick={() => declineApplicantHandler(props.applicant.id)}>
+            Decline
+          </button>
+        </div>
+    
     );
   }
 
@@ -164,7 +145,8 @@ const ProjectAdmin = () => {
       </div>
     );
   }
-
+  console.log(data);
+console.log("asdasd:" + data.projectCategoryName);
   return (
     <div>
       {data && (
@@ -173,7 +155,7 @@ const ProjectAdmin = () => {
             <div>
               <div className="dark" onClick={hideEditForm}></div>
               <div className="aboveDark bg-container">
-                <form onSubmit={handleSubmit(editProject)}>
+                <form onSubmit={handleSubmit(editProjectHandler)}>
                   <h4>Project's name:</h4>
                   <input
                     className="mb-4"
@@ -204,11 +186,14 @@ const ProjectAdmin = () => {
                   <select
                     className="mb-4 w-100"
                     id="Project type"
-                    defaultValue={data.projectCategoryName}
+                    defaultValue={data.categoryName}
                     {...register("projectCategoryName")}
                   >
                     <option value="Game">Game</option>
-                    <option value="Music">Music</option>
+                  <option value="Music">Music</option>
+                  <option value="Film">Film</option>
+                  <option value="Web Development">Web Development</option>
+
                   </select>
                   <h4>Allow Applications</h4>
                   <input
@@ -280,7 +265,7 @@ const ProjectAdmin = () => {
                 <button className="Button" onClick={displayEditForm}>
                   Edit Project
                 </button>
-                <button className="Button" onClick={deleteProject}>
+                <button className="Button" onClick={deleteProjectHandler}>
                   Delete Project
                 </button>
               </div>

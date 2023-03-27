@@ -13,8 +13,8 @@ import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MemberItem from "../../components/Project/MemberItem";
-import { getNonSecretProjectView } from "../../api/project";
-import { idToken } from "../../keycloak";
+import { getNonSecretProjectView, sendApplication } from "../../api/project";
+import { currentUserId } from "../../keycloak";
 
 const ProjectLoggedIn = (props) => {
   const { projectId } = props;
@@ -49,22 +49,12 @@ const ProjectLoggedIn = (props) => {
   const { register, handleSubmit } = useForm();
   const submitJoinForm = async (formData) => {
     setShowJoinForm(false);
-
-    console.log(formData);
-
-    axios
-      .put(
-        `https://localhost:7132/api/Projects/${projectId}/AddProjectApplication`,
-        {
-          applicantId: idToken,
-          message: formData.message,
-        }
-      )
-      .then(async () => {
-      })
-      .catch((error) => {
-        console.error("Error updating project:", error);
-      });
+    const data ={
+        applicantId: currentUserId,
+        message: formData.message,
+      }
+    
+    sendApplication(projectId, data)
   };
 
   return (

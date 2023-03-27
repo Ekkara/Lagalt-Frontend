@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, Nav } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import keycloak from "../../keycloak";
-import { idToken } from "../../keycloak";
+import { currentUserId } from "../../keycloak";
 
 const NavigationMenu = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const NavigationMenu = () => {
       <Dropdown>
         <Dropdown.Toggle variant="primary">Menu</Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item as={Link} to="/" onClick={(e) => handleClick(e, `/Profile/${idToken}`)}>
+          <Dropdown.Item as={Link} to="/" onClick={(e) => handleClick(e, `/Profile/${currentUserId}`)}>
             Profile
           </Dropdown.Item>
           <Dropdown.Item as={Link} to="/" onClick={(e) => handleClick(e, "/")}>

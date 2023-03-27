@@ -1,18 +1,18 @@
 import keycloak from "../keycloak";
 import { createHeaders } from "./apiIndex";
 import axios from "axios";
-import { idToken } from "../keycloak";
-import { baseUrl } from "./application";
+import { currentUserId } from "../keycloak";
+import { BASE_URL } from "./application";
 
 export const getUserById = async (userId) => {
   try {
     // Refresh token if it is expired or will expire soon
-    // if (keycloak.token && keycloak.isTokenExpired()) {
-    //   await keycloak.updateToken();
-    // }
+    if (keycloak.token && keycloak.isTokenExpired()) {
+      await keycloak.updateToken();
+    }
 
     return axios
-      .get(baseUrl + `v1/Users/${userId}?viewerId=${idToken}`)
+      .get(BASE_URL + `v1/Users/${userId}?viewerId=${currentUserId}`)
       .then((result) => {
         return result.data;
       })
@@ -26,13 +26,13 @@ export const getUserById = async (userId) => {
 
 export const updateUser = async (newData) => {
   try {
-    // Refresh token if it is expired or will expire soon
-    // if (keycloak.token && keycloak.isTokenExpired()) {
-    //   await keycloak.updateToken();
-    // }
+      // Refresh token if it is expired or will expire soon
+      if (keycloak.token && keycloak.isTokenExpired()) {
+        await keycloak.updateToken();
+      }
 
     return axios
-    .put(baseUrl + `v1/Users/${idToken}/UpdateUser`, newData)
+    .put(BASE_URL + `v1/Users/${currentUserId}/UpdateUser`, newData)
       .then((result) => {
         return result.data;
       })
@@ -47,12 +47,12 @@ export const updateUser = async (newData) => {
 export const addSkillToUser = async (skill) => {
   try {
     // Refresh token if it is expired or will expire soon
-    // if (keycloak.token && keycloak.isTokenExpired()) {
-    //   await keycloak.updateToken();
-    // }
+    if (keycloak.token && keycloak.isTokenExpired()) {
+      await keycloak.updateToken();
+    }
 
     return await axios
-    .put(baseUrl + `v1/Users/${idToken}/AddSkill?skill=${skill}`)
+    .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`)
       .catch((error) => {
         console.log(error);
       });
@@ -63,12 +63,12 @@ export const addSkillToUser = async (skill) => {
 export const removeSkillFromUser = async (skill) => {
   try {
     // Refresh token if it is expired or will expire soon
-    // if (keycloak.token && keycloak.isTokenExpired()) {
-    //   await keycloak.updateToken();
-    // }
+    if (keycloak.token && keycloak.isTokenExpired()) {
+      await keycloak.updateToken();
+    }
 
     return await axios
-    .put(baseUrl + `v1/Users/${idToken}/RemoveSkill?skill=${skill}`)
+    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`)
       .catch((error) => {
         console.log(error);
       });

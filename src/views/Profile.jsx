@@ -13,7 +13,7 @@ import {
   updateUser,
   removeSkillFromUser,
 } from "../api/user";
-import keycloak, { idToken } from "../keycloak";
+import keycloak, { currentUserId } from "../keycloak";
 import { createProject } from "../api/project";
 
 const Profile = () => {
@@ -47,14 +47,14 @@ const Profile = () => {
     setShowCreateForm(false);
 
     const data = {
-      ownerId: idToken,
+      ownerId: currentUserId,
       projectName: formData.projectName,
       description: formData.projectDescription,
       categoryName: formData.projectCategoryName,
       isAvailable: true,
     };
     await createProject(data);
-    getProfile(idToken);
+    getProfile(currentUserId);
   };
 
   const displayAddSkillForm = () => {
@@ -69,7 +69,7 @@ const Profile = () => {
   const addSkill = async (formData) => {
     setShowAddSkillForm(false);
     await addSkillToUser(formData.skill);
-    getProfile(idToken);
+    getProfile(currentUserId);
   };
 
   const displayEditProfileForm = () => {
@@ -87,11 +87,11 @@ const Profile = () => {
       isProfileHiden: !(formData.newIsProfileHidden === false),
     };
     await updateUser(data);
-    getProfile(idToken);
+    getProfile(currentUserId);
   };
   const removeSkill = async (name) => {
     await removeSkillFromUser(name);
-    await getProfile(idToken);
+    await getProfile(currentUserId);
   };
   function SkillItem(props) {
     return (
@@ -155,6 +155,8 @@ const Profile = () => {
                 >
                   <option value="Game">Game</option>
                   <option value="Music">Music</option>
+                  <option value="Film">Film</option>
+                  <option value="Web Development">Web Development</option>
                 </select>
                 <Row>
                   <Col>
@@ -302,7 +304,7 @@ const Profile = () => {
           </div>
         </div>
         {/* right side */}
-        {idToken.toString() === userId && (
+        {currentUserId.toString() === userId && (
           <div className="bg-frame m-3">
             <div className="bg-content m-3 p-2" id="SecondaryContent">
               <div className="w-100">
