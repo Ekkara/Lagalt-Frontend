@@ -4,6 +4,8 @@ import axios from "axios";
 import { currentUserId } from "../keycloak";
 import { BASE_URL } from "./application";
 
+
+
 export const getUserById = async (userId) => {
   try {
     // Refresh token if it is expired or will expire soon
@@ -11,8 +13,15 @@ export const getUserById = async (userId) => {
       await keycloak.updateToken();
     }
 
+    let config = {
+      headers: {
+        Authorization: "Bearer " + keycloak.token(),
+      }
+    }
+
+    console.log(config);
     return axios
-      .get(BASE_URL + `v1/Users/${userId}?viewerId=${currentUserId}`)
+      .get(BASE_URL + `v1/Users/${userId}?viewerId=${currentUserId}`, config)
       .then((result) => {
         return result.data;
       })
