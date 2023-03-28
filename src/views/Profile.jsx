@@ -121,7 +121,8 @@ const Profile = () => {
   }
 
   return (
-    <Template>
+    <Template
+    mainContent={
       <div id="Content">
         {/* if creating a project  */}
         {showCreateForm && (
@@ -156,7 +157,8 @@ const Profile = () => {
                   <option value="Game">Game</option>
                   <option value="Music">Music</option>
                   <option value="Film">Film</option>
-                  <option value="Web Development">Web Development</option>
+                  <option value="Web-Development">Web Development</option>
+                  <option value="Animation">Animation</option>
                 </select>
                 <Row>
                   <Col>
@@ -334,7 +336,8 @@ const Profile = () => {
           </div>
         )}
       </div>
-    </Template>
+    }
+    />
   );
 };
 export default Profile;

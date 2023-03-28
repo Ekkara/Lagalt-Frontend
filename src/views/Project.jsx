@@ -30,11 +30,10 @@ const Project = () => {
         const data = await projectExist(projectId);
         setData(data);
         if (data && keycloak.authenticated) {
-            const newProjectRole = await getProjectRole(projectId);
-            setProjectRole(newProjectRole);
-            console.log(newProjectRole);
-        }
-        else{
+          const newProjectRole = await getProjectRole(projectId);
+          setProjectRole(newProjectRole);
+          console.log(newProjectRole);
+        } else {
           setProjectRole(0);
         }
       } catch (e) {
@@ -70,6 +69,6 @@ const Project = () => {
     }
   };
 
-  return <Template>{projectRole !== null && getProjectWindow()}</Template>;
+  return <Template mainContent={projectRole !== null && getProjectWindow()} />;
 };
 export default Project;

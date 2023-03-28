@@ -193,7 +193,7 @@ console.log("asdasd:" + data.projectCategoryName);
                   <option value="Music">Music</option>
                   <option value="Film">Film</option>
                   <option value="Web Development">Web Development</option>
-
+                  <option value="Animation">Animation</option>
                   </select>
                   <h4>Allow Applications</h4>
                   <input

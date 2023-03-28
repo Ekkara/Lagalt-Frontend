@@ -156,15 +156,15 @@ export const declineApplication = async (applicationId) => {
     });
 };
 
-export const loadMainPageProjects = async (from, to) => {
-  const result = await axios
-    .get(
-      BASE_URL + `Projects/ProjectsForMainPage?start=${from}&range=${
-        to - from
-      }`
-    )
-    .catch((error) => {
-      console.log(error);
-    });
+export const loadMainPageProjects = async (from, to, searchFilter) => {
+  const result = await axios.get(BASE_URL + `Projects/ProjectsForMainPage`, {
+    params: {
+      start: from,
+      range: to - from,
+      searchFilterJson: JSON.stringify(searchFilter)
+    }
+  }).catch((error) => {
+    console.log(error);
+  });
   return result;
 };

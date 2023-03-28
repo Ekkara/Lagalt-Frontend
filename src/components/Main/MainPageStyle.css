@@ -1,15 +1,59 @@
 .link {
-    text-decoration: none;
-    color: inherit;
-  }
+  text-decoration: none;
+  color: inherit;
+}
 .link:hover {
-    text-decoration: none;
-    color: inherit;    
+  text-decoration: none;
+  color: inherit;
 }
 .link div {
-    border: 3px solid transparent;
- }
- 
- .link:hover div {
-    border: 3px solid #b1b1b1;
- }
+  border: 3px solid transparent;
+}
+
+.link:hover div {
+  border: 3px solid #b1b1b1;
+}
+
+#search-field {
+  margin: auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 100%;
+  height: 40px;
+  border-radius: 12px;
+  background-color: #d9d9d9;
+}
+#search-field input {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 0;
+  background-color: #d9d9d9;
+}
+
+#search-field input:focus {
+  outline: none;
+  background-color: #ffffff;
+}
+
+#searchFilterContainer {
+  padding: 1em 1em 2em 1em;
+  margin: 4em 1.3em 0 1.3em;
+  background-color: #a1a5a1;
+
+  border: 1px solid black;
+}
+.categoryButton{
+  width: 100%;
+  height: 34px;
+}
+#findProjectButton{
+  margin-top: 2em;
+  width: 100%;
+  height: 45px;
+  background-color: rgb(144, 173, 148);
+}
+
+.inline{
+  display:inline;
+}
