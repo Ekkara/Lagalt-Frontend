@@ -26,14 +26,19 @@ const Profile = () => {
   const [profile, setProfile] = useState({});
   const getProfile = async (id) => {
     const data = await getUserById(id);
-    setProfile(data);
-    console.log(data);
+    if (data.error) {
+      console.error(data.error);
+      // Handle the error, e.g., show an error message or redirect to another page
+    } else {
+      setProfile(data);
+      console.log(data);
+    }
   };
 
   useEffect(() => {
     getProfile(userId);
   }, [userId]);
-
+ 
   const displayCreateForm = () => {
     if (showCreateForm) setShowCreateForm(false);
     else setShowCreateForm(true);

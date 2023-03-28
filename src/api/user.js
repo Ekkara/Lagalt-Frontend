@@ -11,7 +11,9 @@ export const getUserById = async (userId) => {
     // Check if the userId and viewerId are valid
     if (userId === -1 || currentUserId === -1) {
       console.error("Invalid userId or viewerId:", userId, currentUserId);
-      return;
+      return {
+        error: "Invalid userId or viewerId",
+      };
     }
     // Refresh token if it is expired or will expire soon
     if (keycloak.token && keycloak.isTokenExpired()) {
