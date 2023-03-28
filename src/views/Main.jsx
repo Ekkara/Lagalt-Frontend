@@ -41,7 +41,6 @@ const Main = () => {
       setData([...data, ...result.data]);
       setLength(currentLength + INCREASE_AMOUNT_OF_ITEM);
   };
-
   function ProjectItem(props) {
     //return the one item in a given format
     return (
@@ -53,7 +52,6 @@ const Main = () => {
       </Link>
     );
   }
-
   return (
     <Template>
       {/* holder for the main stream content */}

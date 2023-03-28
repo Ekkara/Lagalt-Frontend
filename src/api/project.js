@@ -8,8 +8,13 @@ export const createProject = async (data) => {
     if (keycloak.token && keycloak.isTokenExpired()) {
       await keycloak.updateToken();
     }
+    let config = {
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+    }
 
-  await axios.post(BASE_URL + `Projects`, data).catch((error) => {
+  await axios.post(BASE_URL + `Projects`, data, config).catch((error) => {
     console.error("Error while adding:", error);
   });
 };
@@ -19,8 +24,13 @@ export const editProject = async (projectId, data) => {
 if (keycloak.token && keycloak.isTokenExpired()) {
   await keycloak.updateToken();
 }
+let config = {
+  headers: {
+    Authorization: "Bearer " + keycloak.token,
+  },
+}
 
-  await axios.put(BASE_URL + "Projects/" + projectId, data).catch((error) => {
+  await axios.put(BASE_URL + "Projects/" + projectId, data, config).catch((error) => {
     console.error("Error updating project:", error);
   });
 };
@@ -30,8 +40,13 @@ export const deleteProject = async (projectId) => {
   if (keycloak.token && keycloak.isTokenExpired()) {
     await keycloak.updateToken();
   }
+  let config = {
+    headers: {
+      Authorization: "Bearer " + keycloak.token,
+    },
+  }
 
-  axios.delete(BASE_URL + "Projects/" + projectId);
+  axios.delete(BASE_URL + "Projects/" + projectId, config);
 };
 
 export const getProjectRole = async(projectId) => {
@@ -222,8 +237,8 @@ let config = {
   axios
     .put(
       BASE_URL +
-        `Projects/${applicationId}/RemoveProjectApplicationFromProject`,
-      {}, config
+        `Projects/${applicationId}/RemoveProjectApplicationFromProject`, config,
+      {}
     )
     .catch((error) => {
       console.error("Error updating project:", error);
