@@ -3,15 +3,10 @@ import { Link } from "react-router-dom";
 import "../../components/Template/TemplateStyle.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
 import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
-import { Row, Col } from "react-bootstrap";
 import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import MemberItem from "../../components/Project/MemberItem";
 import { getNonSecretProjectView } from "../../api/project";
 import keycloak from "../../keycloak";
@@ -20,21 +15,21 @@ const ProjectNotLoggedIn = (props) => {
   const { projectId } = props;
   const [data, setData] = useState({});
 
+  //on page loaded, fetch the project data that is available for not logged in users
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getNonSecretProjectView(projectId);
         setData(data);
-        console.log(data);
       } catch {
         setData(null);
       }
     };
     fetchData();
   }, [projectId]);
+
   return (
     <div>
-      Not logged in
       {data && (
         <div id="Content">
           <div id="PrimaryContent">
@@ -61,9 +56,14 @@ const ProjectNotLoggedIn = (props) => {
           <div className="bg-frame m-3">
             <div className="bg-content m-3 p-2" id="SecondaryContent">
               <div className="w-100">
-                <button className="Button" onClick={() => keycloak.login()}>
-                  Join Project
-                </button>
+                {data.isAvailable && (
+                  <button className="Button" onClick={()=>keycloak.login()}>
+                    Join Project
+                  </button>
+                )}
+                {!data.isAvailable && (
+                  <button className="Button bg-secondary">Join Project</button>
+                )}
               </div>
             </div>
           </div>

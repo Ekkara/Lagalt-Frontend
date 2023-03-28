@@ -110,3 +110,6 @@ main {
   min-height: 200px;
 }
 
+.right{
+  align-items:flex-end;
+}

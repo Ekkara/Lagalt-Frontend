@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import "../../components/Template/TemplateStyle.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
 import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
-import { Row, Col, Alert } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import "../../components/Profile/Profile.css";
 import "../../components/Template/TemplateStyle.css";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import MemberItem from "../../components/Project/MemberItem";
 import { getNonSecretProjectView, sendApplication } from "../../api/project";
 import { currentUserId } from "../../keycloak";
@@ -34,8 +31,8 @@ const ProjectLoggedIn = (props) => {
 
   const [showJoinForm, setShowJoinForm] = useState(false);
   const cantJoinAlert = () => {   
-      Alert(
-        "Sorry but this project does not take any applicants to join at this time."
+      alert(
+        "Sorry but this project does not accept any open applications at this time."
       );
    };
 
@@ -72,7 +69,7 @@ const ProjectLoggedIn = (props) => {
                     className="mb-4"
                     {...register("message")}
                   />
-                  <p>By confirming this, you agree that they will be able to see your profile even if it is set to being private/hidden </p>
+                  <p>By confirming this, you agree that the admins of this project will be able to see your profile, even if it is set to being hidden </p>
                   <Row>
                     <Col>
                       <button className="w-100" type="submit">

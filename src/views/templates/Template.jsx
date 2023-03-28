@@ -1,35 +1,32 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// import { initialize as initializeKeycloak, KeycloakContext, default as keycloak } from "../../keycloak";
+import { Link } from "react-router-dom";
 import UserDetails from "../../components/UserDetails/userDetail";
 import NavigationMenu from "../../components/Navbar/NavigationMenu";
 import "../../components/Template/TemplateStyle.css";
 import keycloak from "../../keycloak";
 
+//a template that can be applied to any page, uses two parameters
+//one to display the main content and one for any additional aside content
 const Template = ({ mainContent, asideContent }) => {
-  const navigate = useNavigate(); // Create a new navigate instance
-
   return (
     <div className="site-container">
       <header>
-        <Link to="/" className="btn btn-primary">
-          home
-        </Link>
-        <UserDetails />
-      
+          <Link to="/" className="btn btn-primary">
+            home
+          </Link>
+          <UserDetails />
 
-        {keycloak.authenticated ? (
-          <NavigationMenu />
-        ) : (
-          <button
-          className="btn btn-primary"
-          onClick={() =>
-            keycloak.login()
-          }
-        >
-          Login
-        </button>
-        )}
+          <div className="right">
+            {keycloak.authenticated ? (
+              <NavigationMenu />
+            ) : (
+              <button
+                className="btn btn-primary"
+                onClick={() => keycloak.login()}
+              >
+                Login
+              </button>
+            )}
+          </div>
       </header>
       <div className="d-flex same-height">
         <aside>{asideContent}</aside>

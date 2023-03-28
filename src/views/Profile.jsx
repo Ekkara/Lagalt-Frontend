@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Template from "./templates/Template";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
@@ -23,26 +22,33 @@ const Profile = () => {
 
   const { userId } = useParams();
   const [profile, setProfile] = useState({});
+
+   //fetch and set the users profile
   const getProfile = async (id) => {
     const data = await getUserById(id);
     setProfile(data);
-    console.log(data);
   };
 
+  //when page load fetch the user's data
   useEffect(() => {
     getProfile(userId);
   }, [userId]);
 
+  //function to call to display the create form
   const displayCreateForm = () => {
     if (showCreateForm) setShowCreateForm(false);
     else setShowCreateForm(true);
   };
+
+  //close the form
   const hideCreateForm = () => {
     setShowCreateForm(false);
   };
 
+  //a use form to store input the user feed in to the form
   const { register, handleSubmit } = useForm();
 
+  //create a new project
   const createProjectSubmit = async (formData) => {
     setShowCreateForm(false);
 
@@ -56,6 +62,7 @@ const Profile = () => {
     await createProject(data);
     getProfile(currentUserId);
   };
+
 
   const displayAddSkillForm = () => {
     if (showAddSkillForm) setShowAddSkillForm(false);
@@ -89,10 +96,14 @@ const Profile = () => {
     await updateUser(data);
     getProfile(currentUserId);
   };
+
+  //pressing the x on the skill in the skill-list removes it from the project 
   const removeSkill = async (name) => {
     await removeSkillFromUser(name);
     await getProfile(currentUserId);
   };
+
+  //a template for how the skills will be displayed
   function SkillItem(props) {
     return (
       <div className="border border-dark bg-container rounded-10 px-2 position-relative">
@@ -108,11 +119,13 @@ const Profile = () => {
     );
   }
 
+  //a template for how the project the user are collaborating in will be displayed
   function ProjectItem(props) {
-    //return the one item in a given format
     return (
+      //if the user press on a project they will be redirected to the project's page
       <Link to={`/project/${props.project.id}`} className="link">
         <div className="border border-dark bg-container rounded-10 px-2">
+          {/* the project data that is displayed */}
           <h4> {props.project.projectName}</h4>
           <p>{props.project.description}</p>
         </div>
@@ -124,7 +137,7 @@ const Profile = () => {
     <Template
     mainContent={
       <div id="Content">
-        {/* if creating a project  */}
+        {/* display the forms the user are currently in */}
         {showCreateForm && (
           <div>
             <div className="dark" onClick={hideCreateForm}></div>
