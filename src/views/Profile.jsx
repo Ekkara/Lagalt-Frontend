@@ -21,7 +21,8 @@ const Profile = () => {
   const [showAddSkillForm, setShowAddSkillForm] = useState(false);
   const [showEditProfileForm, setShowEditProfileForm] = useState(false);
 
-  const { userId } = useParams();
+  const { userId: paramUserId } = useParams();
+  const userId = paramUserId === "-1" ? currentUserId.toString() : paramUserId;
   const [profile, setProfile] = useState({});
   const getProfile = async (id) => {
     const data = await getUserById(id);

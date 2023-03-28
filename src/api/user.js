@@ -8,6 +8,11 @@ import { BASE_URL } from "./application";
 
 export const getUserById = async (userId) => {
   try {
+    // Check if the userId and viewerId are valid
+    if (userId === -1 || currentUserId === -1) {
+      console.error("Invalid userId or viewerId:", userId, currentUserId);
+      return;
+    }
     // Refresh token if it is expired or will expire soon
     if (keycloak.token && keycloak.isTokenExpired()) {
       await keycloak.updateToken();
@@ -15,8 +20,8 @@ export const getUserById = async (userId) => {
 
     let config = {
       headers: {
-        Authorization: "Bearer " + keycloak.token(),
-      }
+        Authorization: "Bearer " + keycloak.token,
+      },
     }
 
     console.log(config);
@@ -40,8 +45,15 @@ export const updateUser = async (newData) => {
         await keycloak.updateToken();
       }
 
+      const config = {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
+        },
+      };
+
     return axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/UpdateUser`, newData)
+    .put(BASE_URL + `v1/Users/${currentUserId}/UpdateUser`, newData, config)
       .then((result) => {
         return result.data;
       })
@@ -59,9 +71,15 @@ export const addSkillToUser = async (skill) => {
     if (keycloak.token && keycloak.isTokenExpired()) {
       await keycloak.updateToken();
     }
+    const config = {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
+      },
+    };
 
     return await axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`)
+    .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`, null, config)
       .catch((error) => {
         console.log(error);
       });
@@ -76,8 +94,15 @@ export const removeSkillFromUser = async (skill) => {
       await keycloak.updateToken();
     }
 
+    const config = {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
+      },
+    };
+
     return await axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`)
+    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, null, config)
       .catch((error) => {
         console.log(error);
       });
@@ -85,30 +110,3 @@ export const removeSkillFromUser = async (skill) => {
     console.error(error);
   }
 };
-
-// export const getUserInfo = async () => {
-//   try {
-//     // Refresh token if it is expired or will expire soon
-//     if (keycloak.token && keycloak.isTokenExpired()) {
-//       await keycloak.updateToken();
-//     }
-
-//     const response = await fetch("https://localhost:7132/api/v1/Users", {
-//       method: 'GET',
-//       headers: createHeaders()
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
-
-//     const data = await response.json();
-//     if (!data || typeof data !== 'object') {
-//       throw new Error('Response data is empty or not in the expected format');
-//     }
-
-//     return data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };

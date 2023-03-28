@@ -26,7 +26,7 @@ export const initialize = () => {
     keycloak.onAuthSuccess = async function(){
         await axios
           .get(`https://localhost:7132/GetId?keycloakId=${keycloak.tokenParsed.sub}&username=${keycloak.tokenParsed.preferred_username}`,{ headers: {
-            Authorization: "Bearer " + keycloak.token(),
+            Authorization: "Bearer " + keycloak.token,
           }})
           .then((result) => {
             currentUserId = result.data;
