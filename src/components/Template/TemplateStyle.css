@@ -52,28 +52,6 @@ right: 5px;
   width: calc(100% - 200px);
 }
 
-#search-field {
-  margin: auto;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  width: 65%;
-  height: 40px;
-  border-radius: 12px;
-  background-color: #d9d9d9;
-}
-#search-field input {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  border: 0;
-  background-color: #d9d9d9;
-}
-
-#search-field input:focus {
-  outline: none;
-  background-color: #ffffff;
-}
-
 .site-container {
   display: flex;
   flex-direction: column;
@@ -132,3 +110,6 @@ main {
   min-height: 200px;
 }
 
+.right{
+  align-items:flex-end;
+}

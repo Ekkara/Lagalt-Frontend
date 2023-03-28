@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Template from "./templates/Template";
-import axios from "axios";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
-import { Row, Col } from "react-bootstrap";
 import "../components/Profile/Profile.css";
 import "../components/Template/TemplateStyle.css";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import ProjectNotFound from "./templates/ProjectNotFound";
 import ProjectNotLoggedIn from "./templates/ProjectNotLoggedIn";
@@ -21,55 +17,56 @@ import { projectExist } from "../api/project";
 
 const Project = () => {
   const { projectId } = useParams();
-  const [data, setData] = useState();
-  const [projectRole, setProjectRole] = useState(null);
+  const [projectRole, setProjectRole] = useState(-1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await projectExist(projectId);
-        setData(data);
-        if (data && keycloak.authenticated) {
+        //see if project exist
+        const projectFound = await projectExist(projectId);        
+
+        //if it exist we look which role a user has, if we are not logged in at front end we know
+        //the user is not logged in so that role is set manually without needing to communicating
+        //with the server. The number and their representation can be seen below:
+        // 0 - not logged in
+        // 1 - logged in, but not a collaborator
+        // 2 - logged in and is a collaborator
+        // 3 - logged in and is a admin/owner
+        if (projectFound) {
+          if (keycloak.authenticated) {
             const newProjectRole = await getProjectRole(projectId);
             setProjectRole(newProjectRole);
-            console.log(newProjectRole);
-        }
-        else{
-          setProjectRole(0);
-        }
+          }
+          else{
+            setProjectRole(0);
+          }
+        } 
       } catch (e) {
-        console.log(e);
-        setData(null);
+        console.error(e);
       }
     };
     fetchData();
   }, [projectId]);
 
   const getProjectWindow = () => {
-    if (!data) {
-      return <ProjectNotFound />;
-    } else {
-      if (keycloak.authenticated) {
-        switch (projectRole) {
-          case 2:
-            console.log("fetching member view");
-            return <ProjectCollaborator projectId={projectId} />;
+    //if no project was found we display the no project found page as a default (when projectRole still is -1 from it was initiated)
+    switch (projectRole) {
+      case 0:
+        return <ProjectNotLoggedIn projectId={projectId} />; 
 
-          case 3:
-            console.log("fetching admin view");
-            return <ProjectAdmin projectId={projectId} />;
+      case 1:
+        return <ProjectLoggedIn projectId={projectId} />; 
 
-          default:
-            console.log("fetching logged in view");
-            return <ProjectLoggedIn projectId={projectId} />; //not a member in the project (case 1)
-        }
-      } else {
-        console.log("fetching not logged in view");
-        return <ProjectNotLoggedIn projectId={projectId} />; //not logged in
-      }
+      case 2:
+        return <ProjectCollaborator projectId={projectId} />;
+
+      case 3:
+        return <ProjectAdmin projectId={projectId} />;
+
+      default:
+        return <ProjectNotFound />;
     }
   };
-
-  return <Template>{projectRole !== null && getProjectWindow()}</Template>;
+  return <Template mainContent={projectRole !== null && getProjectWindow()} />;
 };
 export default Project;
