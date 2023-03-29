@@ -105,7 +105,7 @@ const ProjectAdmin = () => {
   }
 
   const acceptApplicationHandler = async (applicationId) => {
-    acceptApplication(applicationId);
+    await acceptApplication(applicationId);
     const data = await getAdminView(projectId);
     setData(data);
   };

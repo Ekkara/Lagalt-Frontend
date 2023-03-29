@@ -176,13 +176,14 @@ export const removeUserFromProject = async (userId, projectId) => {
   let config = {
     headers: {
       Authorization: "Bearer " + keycloak.token,
+      'Content-Type': 'application/json',
     },
   };
   try {
     await axios
       .put(
         BASE_URL +
-          `Projects/${projectId}/RemoveMemberFromProject?userId=${userId}`,
+          `Projects/${projectId}/RemoveMemberFromProject?userId=${userId}`, null,
         config
       )
       .catch((error) => {
@@ -226,7 +227,7 @@ export const acceptApplication = async (applicationId) => {
       "Content-Type": "application/json",
     },
   };
-  axios
+  await axios
     .put(
       BASE_URL + `Projects/${applicationId}/AcceptProjectApplication`,
       null,
@@ -248,7 +249,7 @@ export const declineApplication = async (applicationId) => {
       'Content-Type': 'application/json',
     },
   };
-  axios
+  await axios
     .put(
       BASE_URL +
         `Projects/${applicationId}/RemoveProjectApplicationFromProject`,

@@ -6,12 +6,6 @@ import "../UserDetails/userDetailStyle.css";
 
 const UserDetails = () => {
   const keycloak = useContext(KeycloakContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    keycloak.logout();
-    navigate("/"); // Navigate back to the main page
-  };
 
   if (!keycloak.authenticated) {
     return null;
@@ -20,9 +14,6 @@ const UserDetails = () => {
   return (
     <div className="user-details">
       <p>Username: {keycloak.tokenParsed.preferred_username}</p>
-      <p>User ID: {keycloak.tokenParsed.sub}</p>
-      <p>Token: {keycloak.token}</p>
-      {/* <button onClick={handleLogout}>Logout</button> */}
     </div>
   );
 };
