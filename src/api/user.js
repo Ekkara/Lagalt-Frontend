@@ -126,12 +126,13 @@ export const removeSkillFromUser = async (skill) => {
     const config = {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
+        Authorization: `Bearer ${keycloak.token}`, 
+        'Content-Type': 'application/json',
       },
     };
 
     return await axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, config)
+    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, null, config)
       .catch((error) => {
         console.log(error);
       });
