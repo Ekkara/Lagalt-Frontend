@@ -31,6 +31,7 @@ const ProjectCollaborator = (props) => {
       fetchData();
     }, [projectId]);
 
+    //allow users to leave a project
     const leaveProjectHandler = async() =>{
       if (
         window.confirm(

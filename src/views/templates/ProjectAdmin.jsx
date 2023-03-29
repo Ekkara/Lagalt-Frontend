@@ -104,6 +104,7 @@ const ProjectAdmin = () => {
     );
   }
 
+  //functions to mange when application is accepted or removed
   const acceptApplicationHandler = async (applicationId) => {
     await acceptApplication(applicationId);
     const data = await getAdminView(projectId);

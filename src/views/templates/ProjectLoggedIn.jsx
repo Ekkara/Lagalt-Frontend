@@ -30,6 +30,7 @@ const ProjectLoggedIn = (props) => {
   }, [projectId]);
 
   const [showJoinForm, setShowJoinForm] = useState(false);
+  //when trying to apply for a project that has disabled open applications they will only get alerted they can't join
   const cantJoinAlert = () => {   
       alert(
         "Sorry but this project does not accept any open applications at this time."
