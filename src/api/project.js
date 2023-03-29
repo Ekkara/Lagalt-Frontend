@@ -71,7 +71,7 @@ export const getProjectRole = async (projectId) => {
       return result.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -92,7 +92,7 @@ export const projectExist = async (projectId) => {
       return result.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -114,7 +114,7 @@ export const getNonSecretProjectView = async (projectId) => {
       return result.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -139,7 +139,7 @@ export const getCollaboratorView = async (projectId) => {
       return result.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -164,7 +164,7 @@ export const getAdminView = async (projectId) => {
       return result.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -185,7 +185,7 @@ export const removeUserFromProject = async (userId, projectId) => {
         config
       )
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);
@@ -273,7 +273,7 @@ export const loadMainPageProjects = async (from, to, searchFilter) => {
   const result = await axios
     .get(BASE_URL + `Projects/ProjectsForMainPage`, config)
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
   return result;
 };

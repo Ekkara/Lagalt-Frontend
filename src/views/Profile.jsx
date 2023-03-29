@@ -30,7 +30,6 @@ const Profile = () => {
     const data = keycloak.authenticated
       ? await getUserById(id)
       : await getUserByIdNotLoggedIn(id);
-      console.log(data);
 
     if (data.error) {
       console.error(data.error);

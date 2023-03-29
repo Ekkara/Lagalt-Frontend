@@ -32,7 +32,7 @@ export const getUserById = async (userId) => {
         return result.data;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);
@@ -58,7 +58,7 @@ export const getUserByIdNotLoggedIn = async (userId) => {
         return result.data;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);
@@ -106,7 +106,7 @@ export const addSkillToUser = async (skill) => {
     return await axios
     .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`, config)
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);
@@ -127,7 +127,7 @@ export const removeSkillFromUser = async (skill) => {
     return await axios
     .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, null, config)
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);

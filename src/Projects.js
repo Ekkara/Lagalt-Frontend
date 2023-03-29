@@ -56,7 +56,6 @@ const Projects = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    console.log("S");
     getData()
   }, [])
 
@@ -66,7 +65,7 @@ const Projects = () => {
         setData(result.data)
       })
       .catch((error) => {
-        console.log(error)
+        console.error(error)
       })
   }
 

@@ -23,7 +23,6 @@ const ProjectCollaborator = (props) => {
         try {
           const data = await getCollaboratorView(projectId);
           setData(data);
-          console.log(data);
         } catch {
           setData(null);
         }

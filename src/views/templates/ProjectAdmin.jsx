@@ -145,8 +145,7 @@ const ProjectAdmin = () => {
       </div>
     );
   }
-  console.log(data);
-console.log("asdasd:" + data.projectCategoryName);
+  
   return (
     <div>
       {data && (
