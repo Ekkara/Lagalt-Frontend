@@ -4,23 +4,33 @@ import { BASE_URL } from "./application";
 import keycloak from "../keycloak";
 
 export const createProject = async (data) => {
-  // Refresh token if it is expired or will expire soon
-  if (keycloak.token && keycloak.isTokenExpired()) {
-    await keycloak.updateToken();
-  }
+    // Refresh token if it is expired or will expire soon
+    if (keycloak.token && keycloak.isTokenExpired()) {
+      await keycloak.updateToken();
+    }
+    let config = {
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+    }
 
-  await axios.post(BASE_URL + `Projects`, data).catch((error) => {
+  await axios.post(BASE_URL + `Projects`, data, config).catch((error) => {
     console.error("Error while adding:", error);
   });
 };
 
 export const editProject = async (projectId, data) => {
-  // Refresh token if it is expired or will expire soon
-  if (keycloak.token && keycloak.isTokenExpired()) {
-    await keycloak.updateToken();
-  }
+// Refresh token if it is expired or will expire soon
+if (keycloak.token && keycloak.isTokenExpired()) {
+  await keycloak.updateToken();
+}
+let config = {
+  headers: {
+    Authorization: "Bearer " + keycloak.token,
+  },
+}
 
-  await axios.put(BASE_URL + "Projects/" + projectId, data).catch((error) => {
+  await axios.put(BASE_URL + "Projects/" + projectId, data, config).catch((error) => {
     console.error("Error updating project:", error);
   });
 };
@@ -30,8 +40,13 @@ export const deleteProject = async (projectId) => {
   if (keycloak.token && keycloak.isTokenExpired()) {
     await keycloak.updateToken();
   }
+  let config = {
+    headers: {
+      Authorization: "Bearer " + keycloak.token,
+    },
+  }
 
-  axios.delete(BASE_URL + "Projects/" + projectId);
+  axios.delete(BASE_URL + "Projects/" + projectId, config);
 };
 
 export const getProjectRole = async (projectId) => {
@@ -232,9 +247,7 @@ export const declineApplication = async (applicationId) => {
   axios
     .put(
       BASE_URL +
-        `Projects/${applicationId}/RemoveProjectApplicationFromProject`,
-      {},
-      config
+        `Projects/${applicationId}/RemoveProjectApplicationFromProject`, config
     )
     .catch((error) => {
       console.error("Error updating project:", error);
@@ -242,29 +255,26 @@ export const declineApplication = async (applicationId) => {
 };
 
 export const loadMainPageProjects = async (from, to, searchFilter) => {
-  // Refresh token if it is expired or will expire soon
-  if (keycloak.token && keycloak.isTokenExpired()) {
-    await keycloak.updateToken();
-  }
 
-  // let config = {
-  //   headers: {
-  //     Authorization: "Bearer " + keycloak.token,
-  //   },
-  // };
+  // Refresh token if it is expired or will expire soon
+  // if (keycloak.token && keycloak.isTokenExpired()) {
+  //   await keycloak.updateToken();
+  // }
+
+  let config = {
+    params: {
+      start: from,
+      range: to - from,
+      searchFilterJson: JSON.stringify(searchFilter),
+    },
+    headers: {
+      Authorization: "Bearer " + keycloak.token,
+    },
+  };
+
   const result = await axios
     .get(
-      BASE_URL + `Projects/ProjectsForMainPage`,
-      {
-        params: {
-          start: from,
-          range: to - from,
-          searchFilterJson: JSON.stringify(searchFilter),
-        },
-        headers: {
-          Authorization: "Bearer " + keycloak.token,
-        },
-      }
+      BASE_URL + `Projects/ProjectsForMainPage`, config
     )
     .catch((error) => {
       console.log(error);

@@ -123,7 +123,7 @@ export const removeSkillFromUser = async (skill) => {
     }
 
     const config = {
-      method: "PUT",
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
       },
