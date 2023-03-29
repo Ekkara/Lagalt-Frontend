@@ -247,11 +247,11 @@ export const loadMainPageProjects = async (from, to, searchFilter) => {
     await keycloak.updateToken();
   }
 
-  let config = {
-    headers: {
-      Authorization: "Bearer " + keycloak.token,
-    },
-  };
+  // let config = {
+  //   headers: {
+  //     Authorization: "Bearer " + keycloak.token,
+  //   },
+  // };
   const result = await axios
     .get(
       BASE_URL + `Projects/ProjectsForMainPage`,
@@ -261,8 +261,10 @@ export const loadMainPageProjects = async (from, to, searchFilter) => {
           range: to - from,
           searchFilterJson: JSON.stringify(searchFilter),
         },
-      },
-      config
+        headers: {
+          Authorization: "Bearer " + keycloak.token,
+        },
+      }
     )
     .catch((error) => {
       console.log(error);

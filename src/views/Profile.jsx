@@ -11,6 +11,7 @@ import {
   addSkillToUser,
   updateUser,
   removeSkillFromUser,
+  getUserByIdNotLoggedIn,
 } from "../api/user";
 import keycloak, { currentUserId } from "../keycloak";
 import { createProject } from "../api/project";
@@ -24,9 +25,13 @@ const Profile = () => {
   const userId = paramUserId === "-1" ? currentUserId.toString() : paramUserId;
   const [profile, setProfile] = useState({});
 
-   //fetch and set the users profile
+  //fetch and set the users profile
   const getProfile = async (id) => {
-    const data = await getUserById(id);
+    const data = keycloak.authenticated
+      ? await getUserById(id)
+      : await getUserByIdNotLoggedIn(id);
+      console.log(data);
+
     if (data.error) {
       console.error(data.error);
       // Handle the error, e.g., show an error message or redirect to another page
@@ -40,7 +45,6 @@ const Profile = () => {
   useEffect(() => {
     getProfile(userId);
   }, [userId]);
- 
 
   //function to call to display the create form
   const displayCreateForm = () => {
@@ -70,7 +74,6 @@ const Profile = () => {
     await createProject(data);
     getProfile(currentUserId);
   };
-
 
   const displayAddSkillForm = () => {
     if (showAddSkillForm) setShowAddSkillForm(false);
@@ -105,7 +108,7 @@ const Profile = () => {
     getProfile(currentUserId);
   };
 
-  //pressing the x on the skill in the skill-list removes it from the project 
+  //pressing the x on the skill in the skill-list removes it from the project
   const removeSkill = async (name) => {
     await removeSkillFromUser(name);
     await getProfile(currentUserId);
@@ -116,7 +119,8 @@ const Profile = () => {
     return (
       <div className="border border-dark bg-container rounded-10 px-2 position-relative">
         <h4>{props.skill.name}</h4>
-        <button className="bg-light rounded-10 px-2 removeKey"
+        <button
+          className="bg-light rounded-10 px-2 removeKey"
           onClick={() => {
             removeSkill(props.skill.name);
           }}
@@ -143,221 +147,221 @@ const Profile = () => {
 
   return (
     <Template
-    mainContent={
-      <div id="Content">
-        {/* display the forms the user are currently in */}
-        {showCreateForm && (
-          <div>
-            <div className="dark" onClick={hideCreateForm}></div>
-            <div className="aboveDark bg-container">
-              <form onSubmit={handleSubmit(createProjectSubmit)}>
-                <h4>Project's name:</h4>
-                <input
-                  className="mb-4"
-                  placeholder="Insert name..."
-                  {...register("projectName", {
-                    required: true,
-                    minLength: 5,
-                    maxLength: 50,
-                  })}
-                />
+      mainContent={
+        <div id="Content">
+          {/* display the forms the user are currently in */}
+          {showCreateForm && (
+            <div>
+              <div className="dark" onClick={hideCreateForm}></div>
+              <div className="aboveDark bg-container">
+                <form onSubmit={handleSubmit(createProjectSubmit)}>
+                  <h4>Project's name:</h4>
+                  <input
+                    className="mb-4"
+                    placeholder="Insert name..."
+                    {...register("projectName", {
+                      required: true,
+                      minLength: 5,
+                      maxLength: 50,
+                    })}
+                  />
 
-                <h4>Project's description:</h4>
-                <textarea
-                  className="mb-4"
-                  placeholder="Insert description..."
-                  {...register("projectDescription")}
-                />
+                  <h4>Project's description:</h4>
+                  <textarea
+                    className="mb-4"
+                    placeholder="Insert description..."
+                    {...register("projectDescription")}
+                  />
 
-                <h4>Project type</h4>
-                <select
-                  className="mb-4 w-100"
-                  id="Project type"
-                  {...register("projectCategoryName")}
-                >
-                  <option value="Game">Game</option>
-                  <option value="Music">Music</option>
-                  <option value="Film">Film</option>
-                  <option value="Web-Development">Web Development</option>
-                  <option value="Animation">Animation</option>
-                </select>
-                <Row>
-                  <Col>
-                    <button className="w-100" type="submit">
-                      Create
-                    </button>
-                  </Col>
-                  <Col>
-                    <button className="w-100" onClick={hideCreateForm}>
-                      Cancel
-                    </button>
-                  </Col>
-                </Row>
-              </form>
+                  <h4>Project type</h4>
+                  <select
+                    className="mb-4 w-100"
+                    id="Project type"
+                    {...register("projectCategoryName")}
+                  >
+                    <option value="Game">Game</option>
+                    <option value="Music">Music</option>
+                    <option value="Film">Film</option>
+                    <option value="Web-Development">Web Development</option>
+                    <option value="Animation">Animation</option>
+                  </select>
+                  <Row>
+                    <Col>
+                      <button className="w-100" type="submit">
+                        Create
+                      </button>
+                    </Col>
+                    <Col>
+                      <button className="w-100" onClick={hideCreateForm}>
+                        Cancel
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
-        {showAddSkillForm && (
-          <div>
-            <div className="dark" onClick={hideAddSkillForm}></div>
-            <div className="aboveDark bg-container">
-              <form onSubmit={handleSubmit(addSkill)}>
-                <h4>New skill:</h4>
-                <textarea
-                  className="mb-4"
-                  placeholder="Insert skill..."
-                  {...register("skill", {
-                    required: true,
-                    minLength: 2,
-                  })}
-                />
-                <Row>
-                  <Col>
-                    <button className="w-100" type="submit">
-                      Add skill
-                    </button>
-                  </Col>
-                  <Col>
-                    <button className="w-100" onClick={hideAddSkillForm}>
-                      Cancel
-                    </button>
-                  </Col>
-                </Row>
-              </form>
+          )}
+          {showAddSkillForm && (
+            <div>
+              <div className="dark" onClick={hideAddSkillForm}></div>
+              <div className="aboveDark bg-container">
+                <form onSubmit={handleSubmit(addSkill)}>
+                  <h4>New skill:</h4>
+                  <textarea
+                    className="mb-4"
+                    placeholder="Insert skill..."
+                    {...register("skill", {
+                      required: true,
+                      minLength: 2,
+                    })}
+                  />
+                  <Row>
+                    <Col>
+                      <button className="w-100" type="submit">
+                        Add skill
+                      </button>
+                    </Col>
+                    <Col>
+                      <button className="w-100" onClick={hideAddSkillForm}>
+                        Cancel
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
-        {showEditProfileForm && (
-          <div>
-            <div className="dark" onClick={hideEditProfileForm}></div>
-            <div className="aboveDark bg-container">
-              <form onSubmit={handleSubmit(editProfile)}>
-                <h4>New description:</h4>
-                <textarea
-                  className="mb-4"
-                  placeholder="Insert new description..."
-                  defaultValue={profile.description}
-                  {...register("newProfileDescription")}
-                />
-                <h4>Hide profile:</h4>
-                <input
-                  type="checkbox"
-                  defaultChecked={profile.isProfileHiden}
-                  {...register("newIsProfileHidden")}
-                />
-                <Row>
-                  <Col>
-                    <button className="w-100" type="submit">
-                      Confirm
-                    </button>
-                  </Col>
-                  <Col>
-                    <button className="w-100" onClick={hideEditProfileForm}>
-                      Cancel
-                    </button>
-                  </Col>
-                </Row>
-              </form>
+          )}
+          {showEditProfileForm && (
+            <div>
+              <div className="dark" onClick={hideEditProfileForm}></div>
+              <div className="aboveDark bg-container">
+                <form onSubmit={handleSubmit(editProfile)}>
+                  <h4>New description:</h4>
+                  <textarea
+                    className="mb-4"
+                    placeholder="Insert new description..."
+                    defaultValue={profile.description}
+                    {...register("newProfileDescription")}
+                  />
+                  <h4>Hide profile:</h4>
+                  <input
+                    type="checkbox"
+                    defaultChecked={profile.isProfileHiden}
+                    {...register("newIsProfileHidden")}
+                  />
+                  <Row>
+                    <Col>
+                      <button className="w-100" type="submit">
+                        Confirm
+                      </button>
+                    </Col>
+                    <Col>
+                      <button className="w-100" onClick={hideEditProfileForm}>
+                        Cancel
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
             </div>
-          </div>
-        )}
-        {/* left side */}
-        <div id="PrimaryContent" className="mx-3">
-          <div>
-            {profile && (
-              <div>
-                <h3>{profile.userName}'s profile</h3>
-                <div className="w-80 mx-auto">
-                  {profile.profileImgSrc ? (
-                    <img
-                      src={profile.profileImgSrc}
-                      className="w-100"
-                      alt="Profile picture"
-                    />
-                  ) : null}
-                </div>
-
-                <h4>Profile description</h4>
-                <div
-                  style={{
-                    minHeight: "50px",
-                    maxHeight: "200px",
-                    overflow: "auto",
-                  }}
-                  className="bg-container w-100"
-                >
-                  <p>{profile.description}</p>
-                </div>
-
-                {profile.displayingProfile && (
-                  <div>
-                    <h4>Projects</h4>
-                    <div
-                      style={{
-                        minHeight: "50px",
-                        maxHeight: "200px",
-                        overflow: "auto",
-                      }}
-                      className="bg-container"
-                    >
-                      {profile.projects &&
-                        profile.projects.map((item) => (
-                          <ProjectItem key={item.id} project={item} />
-                        ))}
-                    </div>
-
-                    <h4>Skills</h4>
-                    <div
-                      style={{
-                        minHeight: "50px",
-                        maxHeight: "200px",
-                        overflow: "auto",
-                      }}
-                      className="bg-container"
-                    >
-                      {profile.skills &&
-                        profile.skills.map((item) => (
-                          <SkillItem key={item.id} skill={item} />
-                        ))}
-                    </div>
+          )}
+          {/* left side */}
+          <div id="PrimaryContent" className="mx-3">
+            <div>
+              {profile && (
+                <div>
+                  <h3>{profile.userName}'s profile</h3>
+                  <div className="w-80 mx-auto">
+                    {profile.profileImgSrc ? (
+                      <img
+                        src={profile.profileImgSrc}
+                        className="w-100"
+                        alt="Profile picture"
+                      />
+                    ) : null}
                   </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-        {/* right side */}
-        {currentUserId.toString() === userId && (
-          <div className="bg-frame m-3">
-            <div className="bg-content m-3 p-2" id="SecondaryContent">
-              <div className="w-100">
-                <button className="Button" onClick={displayCreateForm}>
-                  Create Project
-                </button>
-              </div>
-            </div>
 
-            <div className="bg-content m-3 p-2" id="SecondaryContent">
-              <div className="w-100">
-                <button className="Button" onClick={displayEditProfileForm}>
-                  Edit profile
-                </button>
-              </div>
-              <div className="w-100">
-                <button className="Button" onClick={displayAddSkillForm}>
-                  Add skill
-                </button>
-              </div>
-              <div className="w-100">
-                <button className="Button" onClick={() => keycloak.logout()}>
-                  Log out
-                </button>
-              </div>
+                  <h4>Profile description</h4>
+                  <div
+                    style={{
+                      minHeight: "50px",
+                      maxHeight: "200px",
+                      overflow: "auto",
+                    }}
+                    className="bg-container w-100"
+                  >
+                    <p>{profile.description}</p>
+                  </div>
+
+                  {profile.displayingProfile && (
+                    <div>
+                      <h4>Projects</h4>
+                      <div
+                        style={{
+                          minHeight: "50px",
+                          maxHeight: "200px",
+                          overflow: "auto",
+                        }}
+                        className="bg-container"
+                      >
+                        {profile.projects &&
+                          profile.projects.map((item) => (
+                            <ProjectItem key={item.id} project={item} />
+                          ))}
+                      </div>
+
+                      <h4>Skills</h4>
+                      <div
+                        style={{
+                          minHeight: "50px",
+                          maxHeight: "200px",
+                          overflow: "auto",
+                        }}
+                        className="bg-container"
+                      >
+                        {profile.skills &&
+                          profile.skills.map((item) => (
+                            <SkillItem key={item.id} skill={item} />
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </div>
-    }
+          {/* right side */}
+          {currentUserId.toString() === userId && (
+            <div className="bg-frame m-3">
+              <div className="bg-content m-3 p-2" id="SecondaryContent">
+                <div className="w-100">
+                  <button className="Button" onClick={displayCreateForm}>
+                    Create Project
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-content m-3 p-2" id="SecondaryContent">
+                <div className="w-100">
+                  <button className="Button" onClick={displayEditProfileForm}>
+                    Edit profile
+                  </button>
+                </div>
+                <div className="w-100">
+                  <button className="Button" onClick={displayAddSkillForm}>
+                    Add skill
+                  </button>
+                </div>
+                <div className="w-100">
+                  <button className="Button" onClick={() => keycloak.logout()}>
+                    Log out
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      }
     />
   );
 };

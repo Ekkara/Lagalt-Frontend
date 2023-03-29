@@ -127,10 +127,10 @@ const Main = () => {
     setShowFilms(!showFilms);
   };
   const showAnimationHandler = () => {
-    setShowAnimation(showAnimation);
+    setShowAnimation(!showAnimation);
   };
   const showWebHandler = () => {
-    setShowWeb(showWeb);
+    setShowWeb(!showWeb);
   };
   const handleHideFullProject = () => {
     setHideClosedProjects(!hideClosedProjects);

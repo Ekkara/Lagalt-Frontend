@@ -39,6 +39,32 @@ export const getUserById = async (userId) => {
     console.error(error);
   }
 };
+export const getUserByIdNotLoggedIn = async (userId) => {
+  try {
+    // Check if the userId and viewerId are valid
+    if (userId === -1) {
+      console.error("Invalid userId:", userId);
+      return {
+        error: "Invalid userId or",
+      };
+    }
+    let config = {
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+    }
+    return axios
+      .get(BASE_URL + `v1/Users/${userId}/GetUserNotLoggedIn`, config)
+      .then((result) => {
+        return result.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const updateUser = async (newData) => {
   try {
@@ -81,7 +107,7 @@ export const addSkillToUser = async (skill) => {
     };
 
     return await axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`, null, config)
+    .put(BASE_URL + `v1/Users/${currentUserId}/AddSkill?skill=${skill}`, config)
       .catch((error) => {
         console.log(error);
       });
@@ -104,7 +130,7 @@ export const removeSkillFromUser = async (skill) => {
     };
 
     return await axios
-    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, null, config)
+    .put(BASE_URL + `v1/Users/${currentUserId}/RemoveSkill?skill=${skill}`, config)
       .catch((error) => {
         console.log(error);
       });
