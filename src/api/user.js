@@ -103,6 +103,7 @@ export const addSkillToUser = async (skill) => {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${keycloak.token}`, // Remove the function call here
+        'Content-Type': 'application/json', // Add this line
       },
     };
 
