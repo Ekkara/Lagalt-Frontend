@@ -52,7 +52,7 @@ export const getUserByIdNotLoggedIn = async (userId) => {
         Authorization: "Bearer " + keycloak.token,
       },
     }
-    return axios
+    return await axios
       .get(BASE_URL + `v1/Users/${userId}/GetUserNotLoggedIn`, config)
       .then((result) => {
         return result.data;
