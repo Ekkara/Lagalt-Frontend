@@ -2,6 +2,7 @@ import axios from "axios";
 import { currentUserId } from "../keycloak";
 import { BASE_URL } from "./application";
 import keycloak from "../keycloak";
+import { createHeaders } from "./apiIndex";
 
 export const createProject = async (data) => {
   // Refresh token if it is expired or will expire soon
@@ -174,10 +175,7 @@ export const removeUserFromProject = async (userId, projectId) => {
   }
 
   let config = {
-    headers: {
-      Authorization: "Bearer " + keycloak.token,
-      'Content-Type': 'application/json',
-    },
+    headers: createHeaders(),
   };
   try {
     await axios
@@ -222,10 +220,7 @@ export const acceptApplication = async (applicationId) => {
   }
 
   let config = {
-    headers: {
-      Authorization: "Bearer " + keycloak.token,
-      "Content-Type": "application/json",
-    },
+    headers: createHeaders(),
   };
   await axios
     .put(
@@ -244,10 +239,7 @@ export const declineApplication = async (applicationId) => {
   }
 
   let config = {
-    headers: {
-      Authorization: "Bearer " + keycloak.token,
-      'Content-Type': 'application/json',
-    },
+    headers:  createHeaders(),
   };
   await axios
     .put(

@@ -26,7 +26,6 @@ export const getUserById = async (userId) => {
       },
     }
 
-    console.log(config);
     return axios
       .get(BASE_URL + `v1/Users/${userId}?viewerId=${currentUserId}`, config)
       .then((result) => {
@@ -86,7 +85,7 @@ export const updateUser = async (newData) => {
         return result.data;
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   } catch (error) {
     console.error(error);
@@ -101,10 +100,7 @@ export const addSkillToUser = async (skill) => {
     }
     const config = {
       method: "PUT",
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`, 
-        'Content-Type': 'application/json', 
-      },
+      headers: createHeaders(),
     };
 
     return await axios
@@ -125,10 +121,7 @@ export const removeSkillFromUser = async (skill) => {
 
     const config = {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`, 
-        'Content-Type': 'application/json',
-      },
+      headers: createHeaders(),
     };
 
     return await axios
