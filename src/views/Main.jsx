@@ -167,9 +167,8 @@ const Main = () => {
   const isShowingColor = "#b0cfab";
   const isNotShowingColor = "#d4d4d4";
 
+  //make the filter static if the user scrolls below the header
   const [isSidebarFixed, setIsSidebarFixed] = useState(false);
-
-  // attach scroll event listener in a useEffect hook
   useEffect(() => {
    function handleScroll() {
      const headerHeight = 100;
