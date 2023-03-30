@@ -255,9 +255,6 @@ export const declineApplication = async (applicationId) => {
 
 export const loadMainPageProjects = async (from, to, searchFilter) => {
   // Refresh token if it is expired or will expire soon
-  // if (keycloak.token && keycloak.isTokenExpired()) {
-  //   await keycloak.updateToken();
-  // }
 
   let config = {
     params: {
