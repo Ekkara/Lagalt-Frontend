@@ -268,12 +268,6 @@ const ProjectAdmin = () => {
                 </button>
               </div>
             </div>
-
-            <div className="bg-content m-3 p-2" id="SecondaryContent">
-              <div className="w-100">
-                <button className="Button">Group Chat</button>
-              </div>
-            </div>
           </div>
         </div>
       )}

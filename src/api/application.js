@@ -1,1 +1,1 @@
-export const BASE_URL = "lagaltcase.azurewebsites.net";//"https://localhost:7132/api/";
+export const BASE_URL = "lagaltcase.azurewebsites.net/";//"https://localhost:7132/api/";
