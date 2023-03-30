@@ -44,16 +44,11 @@ export const getUserByIdNotLoggedIn = async (userId) => {
     if (userId === -1) {
       console.error("Invalid userId:", userId);
       return {
-        error: "Invalid userId or",
+        error: "Invalid userId",
       };
     }
-    let config = {
-      headers: {
-        Authorization: "Bearer " + keycloak.token,
-      },
-    }
-    return axios
-      .get(BASE_URL + `v1/Users/${userId}/GetUserNotLoggedIn`, config)
+    return await axios
+    .get(BASE_URL + `v1/Users/${userId}/getUserByIdNotLoggedIn`)
       .then((result) => {
         return result.data;
       })

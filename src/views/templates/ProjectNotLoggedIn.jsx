@@ -50,7 +50,6 @@ const ProjectNotLoggedIn = (props) => {
                     ))}
                 </div>
               </div>
-              <Link to="/Main">Go back to the main page</Link>
             </div>
           </div>
           <div className="bg-frame m-3">

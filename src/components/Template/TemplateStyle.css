@@ -59,18 +59,21 @@ right: 5px;
 }
 
 header {
+  min-height: 100px;
   display: flex;
   flex-direction: row;
   background-color: #c9cfcf;
 }
 
 aside {
+  position: relative;
   background-color: #b3bcbc;
   width: 300px;
   flex-shrink: 0;
 
   min-height: calc(100vh - 80px);
 }
+
 
 main {
   background-color: #a8b2b2;

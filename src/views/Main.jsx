@@ -106,7 +106,7 @@ const Main = () => {
     }
   }, [showGames, showAnimation, showFilms, showMusic, showWeb, showAll]);
 
-  //activate show all filter and deactivate all other filters 
+  //activate show all filter and deactivate all other filters
   const showAllHandler = () => {
     setShowAll(true);
     setShowGames(false);
@@ -166,23 +166,49 @@ const Main = () => {
   //reusable colors
   const isShowingColor = "#b0cfab";
   const isNotShowingColor = "#d4d4d4";
+
+  //make the filter static if the user scrolls below the header
+  const [isSidebarFixed, setIsSidebarFixed] = useState(false);
+  useEffect(() => {
+   function handleScroll() {
+     const headerHeight = 100;
+     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+     setIsSidebarFixed(scrollTop > headerHeight);
+   }
+   window.addEventListener('scroll', handleScroll);
+   return () => window.removeEventListener('scroll', handleScroll);
+ }, []);
+
   return (
     <Template
       mainContent={
         <>
           <div className="bg-container m-5">
             <div className="mx-4 py-2">
-              {/* generate list on displayable on the page of all projects   */}
-              {data.map((item, index) => (
-                <ProjectItem key={index} project={item} />
-              ))}
+              {data.length >= 1 ? (
+                <>
+                  {/* generate list on displayable on the page of all projects   */}
+                  {data.map((item, index) => (
+                    <ProjectItem key={index} project={item} />
+                  ))}
+                </>
+              ) : (
+                <>
+                <h2>
+                  No project where found that matches your search filter!
+                </h2>
+                <h3>
+                  Try to remove some filters, or if you think this is a connection error please refresh the page!
+                </h3>
+                </>
+              )}
             </div>
           </div>
         </>
       }
       asideContent={
         <>
-          <div id="searchFilterContainer">
+          <div className={`searchFilterContainer ${isSidebarFixed ? 'fixed' : ''}`}>
             <div id="search-field">
               <input
                 type="text"
