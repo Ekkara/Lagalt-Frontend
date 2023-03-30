@@ -29,7 +29,7 @@ const Template = ({ mainContent, asideContent }) => {
           </div>
       </header>
       <div className="d-flex same-height">
-        <aside>{asideContent}</aside>
+      <aside>{asideContent}</aside>
         <main>{mainContent}</main>
       </div>
     </div>

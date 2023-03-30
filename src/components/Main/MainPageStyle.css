@@ -37,12 +37,18 @@
   background-color: #ffffff;
 }
 
-#searchFilterContainer {
+.searchFilterContainer {
+  position: relative; 
   padding: 1em 1em 2em 1em;
   margin: 4em 1.3em 0 1.3em;
   background-color: #a1a5a1;
 
   border: 1px solid black;
+}
+.searchFilterContainer.fixed {
+  position: fixed;
+  top: 0;
+  width: calc(300px - 2.6em);
 }
 .categoryButton{
   width: 100%;
@@ -58,3 +64,5 @@
 .inline{
   display:inline;
 }
+
+

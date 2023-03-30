@@ -166,6 +166,20 @@ const Main = () => {
   //reusable colors
   const isShowingColor = "#b0cfab";
   const isNotShowingColor = "#d4d4d4";
+
+  const [isSidebarFixed, setIsSidebarFixed] = useState(false);
+
+  // attach scroll event listener in a useEffect hook
+  useEffect(() => {
+   function handleScroll() {
+     const headerHeight = 100;
+     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+     setIsSidebarFixed(scrollTop > headerHeight);
+   }
+   window.addEventListener('scroll', handleScroll);
+   return () => window.removeEventListener('scroll', handleScroll);
+ }, []);
+
   return (
     <Template
       mainContent={
@@ -195,7 +209,7 @@ const Main = () => {
       }
       asideContent={
         <>
-          <div id="searchFilterContainer">
+          <div className={`searchFilterContainer ${isSidebarFixed ? 'fixed' : ''}`}>
             <div id="search-field">
               <input
                 type="text"
