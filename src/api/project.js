@@ -205,7 +205,7 @@ export const sendApplication = async (projectId, data) => {
   };
   axios
     .put(
-      `https://localhost:7132/api/Projects/${projectId}/AddProjectApplication`,
+      `${BASE_URL}/Projects/${projectId}/AddProjectApplication`,
       data,
       config
     )
